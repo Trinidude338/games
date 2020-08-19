@@ -38,7 +38,7 @@ def main():
     clouds = []
     enemys = []
     stars = []
-    health = 20
+    health = 10
     ammo = 20
     prevscore = 0
     notshootingframe = 0
@@ -167,6 +167,9 @@ def main():
                     bullets.pop(bullets.index(i))
                     enemys.pop(enemys.index(j))
                     score += 1
+                    health += 1
+                    if (health>10):
+                        health = 10
                     ammo += 2
                     if ammo>20:
                         ammo = 20
@@ -291,14 +294,14 @@ def drawUI(stdscr, health, ammo):
     while (health>0):
         stdscr.addch('#')
         health -= 1
-    stdscr.move(0, 29)
+    stdscr.move(0, 19)
     stdscr.addch(']')
-    stdscr.move(0, 35)
+    stdscr.move(0, 25)
     stdscr.addstr("Ammo: [")
     while ammo>0:
         stdscr.addch("-")
         ammo -= 1
-    stdscr.move(0, 62)
+    stdscr.move(0, 52)
     stdscr.addch("]")
 
 def drawEnemy(stdscr, enemId, enemY, enemX):
