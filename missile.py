@@ -44,7 +44,7 @@ def main():
     notshootingframe = 0
     drawTitle(stdscr, prevscore)
     drawControls(stdscr)
-    for i in range(100):
+    for i in range(125):
         stars.append([random.randrange(3), random.randrange(maxyx[0]-1), random.randrange(maxyx[1]-1)])
     while(dead!=True):
         if (frame>59):
@@ -181,6 +181,8 @@ def main():
         #replenish ammo
         if (notshootingframe%180==0):
             ammo += 2
+            if ammo>20:
+                ammo = 20
         #check if dead
         if (health<1):
             gameover(stdscr, score)
@@ -258,7 +260,7 @@ def drawControls(stdscr):
 
 def drawTitle(stdscr, prevscore):
     maxyx = stdscr.getmaxyx()
-    title = "M1$$1L3"
+    title = "Missile"
     stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
     stdscr.addstr(title)
     stdscr.refresh()
