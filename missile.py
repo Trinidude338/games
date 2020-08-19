@@ -167,6 +167,7 @@ def main():
                     bullets.pop(bullets.index(i))
                     enemys.pop(enemys.index(j))
                     score += 1
+                    ammo += 2
         #add stars
         if (frame%random.randrange(20, 40)==0):
             stars.append([random.randrange(3), random.randrange(maxyx[0]-1), maxyx[1]-1])
