@@ -67,6 +67,7 @@ def main():
             c = 0
         #moving, quitting, shooting, and all that stuff
         if (c == 'q'):
+            gameover(stdscr, score)
             break
         if (c == 'w'):
             rocketxy[0] -= 2
