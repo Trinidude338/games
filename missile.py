@@ -37,10 +37,13 @@ def main():
     score = 0
     clouds = []
     enemys = []
+    stars = []
     health = 20
     prevscore = 0
     drawTitle(stdscr, prevscore)
     drawControls(stdscr)
+    for i in range(100):
+        stars.append([random.randrange(3), random.randrange(maxyx[0]-1), random.randrange(maxyx[1]-1)])
     while(dead!=True):
         if (frame>59):
             frame = 0
@@ -48,6 +51,7 @@ def main():
         else:
             frame += 1
         #draw frame
+        drawBG(stdscr, stars)
         drawClouds(stdscr, clouds)
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
@@ -70,7 +74,7 @@ def main():
             rocketxy[1] += 2
         if (c == 'a'):
             rocketxy[1] -= 2
-        if (c == 'j' and frame%2==0):
+        if (c == 'j' and frame%1==0):
             bullets.append([rocketxy[0]-3, rocketxy[1]+6])
             bullets.append([rocketxy[0]-1, rocketxy[1]+6])
             stdscr.move(rocketxy[0]+2, rocketxy[1]+1)
@@ -158,6 +162,17 @@ def main():
                     bullets.pop(bullets.index(i))
                     enemys.pop(enemys.index(j))
                     score += 1
+        #add stars
+        if (frame%random.randrange(20, 40)==0):
+            stars.append([random.randrange(3), random.randrange(maxyx[0]-1), maxyx[1]-1])
+        #move stars
+        if (frame%10==0):
+            for i in stars:
+                i[2] -= 1
+        #delete stars at edge
+        for i in stars:
+            if (i[2]<=4):
+                stars.pop(stars.index(i))
         #check if dead
         if (health<1):
             gameover(stdscr, score)
@@ -166,6 +181,37 @@ def main():
         stdscr.erase()
         time.sleep(0.016)
     curses.endwin()
+
+def drawBG(stdscr, stars):
+    maxyx = stdscr.getmaxyx()
+    #stars
+    for i in stars:
+        if (i[0]==0):
+            star = "*"
+        elif (i[0]==1):
+            star = "-"
+        elif (i[0]==2):
+            star = "."
+        stdscr.move(i[1], i[2])
+        stdscr.addch(star)
+    #moon
+    moon = ".-.,=\"''\"=.    0'=/_       \\0 |  '=._    |0  \\     '=./`,0   '=.__.=' `='"
+    count = 0
+    curs = [10, maxyx[1]-20]
+    for i in moon:
+        if (i==' '):
+            count += 1
+            curs[1] += 1
+            continue
+        elif (i=='0'):
+            curs[1] -= count
+            curs[0] += 1
+            count = 0
+            continue
+        else:
+            stdscr.addch(curs[0], curs[1], i)
+            curs[1] += 1
+            count += 1
 
 def drawControls(stdscr):
     maxyx = stdscr.getmaxyx()
