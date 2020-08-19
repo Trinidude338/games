@@ -39,7 +39,9 @@ def main():
     enemys = []
     stars = []
     health = 20
+    ammo = 20
     prevscore = 0
+    notshootingframe = 0
     drawTitle(stdscr, prevscore)
     drawControls(stdscr)
     for i in range(100):
@@ -57,7 +59,7 @@ def main():
         for i in enemys:
             drawEnemy(stdscr, i[0], i[1], i[2])
         drawRocket(stdscr, rocketxy)
-        drawUI(stdscr, health)
+        drawUI(stdscr, health, ammo)
         #keyboard input
         try:
             c = stdscr.getkey()
@@ -74,10 +76,11 @@ def main():
             rocketxy[1] += 2
         if (c == 'a'):
             rocketxy[1] -= 2
-        if (c == 'j' and frame%1==0):
+        if (c == 'j' and frame%1==0 and ammo>0):
             bullets.append([rocketxy[0]-3, rocketxy[1]+6])
             bullets.append([rocketxy[0]-1, rocketxy[1]+6])
             stdscr.move(rocketxy[0]+2, rocketxy[1]+1)
+            ammo -= 2
             stdscr.addstr("FIRE", curses.COLOR_GREEN)
             stdscr.refresh()
         elif (c == 'j' and frame%2!=0):
@@ -89,6 +92,8 @@ def main():
                 stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-3))
                 stdscr.addstr("PAUSED")
                 time.sleep(0.016)
+        if (c != 'j'):
+            notshootingframe += 1
         #keeping rocket in bounds
         if (rocketxy[0]<5):
             rocketxy[0] = 5
@@ -173,6 +178,9 @@ def main():
         for i in stars:
             if (i[2]<=4):
                 stars.pop(stars.index(i))
+        #replenish ammo
+        if (notshootingframe%180==0):
+            ammo += 2
         #check if dead
         if (health<1):
             gameover(stdscr, score)
@@ -272,8 +280,7 @@ def gameover(stdscr, score):
     while (stdscr.getch()==curses.ERR):
         time.sleep(0.016)
 
-def drawUI(stdscr, health):
-    #just a health meter for now ~\_(O-O)_/~
+def drawUI(stdscr, health, ammo):
     stdscr.move(0, 0)
     stdscr.addstr("Health: [")
     while (health>0):
@@ -281,6 +288,13 @@ def drawUI(stdscr, health):
         health -= 1
     stdscr.move(0, 29)
     stdscr.addch(']')
+    stdscr.move(0, 35)
+    stdscr.addstr("Ammo: [")
+    while ammo>0:
+        stdscr.addch("-")
+        ammo -= 1
+    stdscr.move(0, 62)
+    stdscr.addch("]")
 
 def drawEnemy(stdscr, enemId, enemY, enemX):
     maxyx = stdscr.getmaxyx()
