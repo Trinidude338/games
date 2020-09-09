@@ -38,6 +38,7 @@ def main():
     clouds = []
     enemys = []
     stars = []
+    ufos = []
     health = 10
     ammo = 20
     prevscore = 0
@@ -58,6 +59,7 @@ def main():
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
             drawEnemy(stdscr, i[0], i[1], i[2])
+        drawUfos(stdscr, ufos, frame)
         drawRocket(stdscr, rocketxy)
         drawUI(stdscr, health, ammo)
         #keyboard input
@@ -113,6 +115,9 @@ def main():
                 j = random.randrange(100)
                 if (j%2==0):
                     bullets1.append([i[1]-2, i[2]-2])
+        if (frame%10<5):
+            for i in ufos:
+                bullets1.append([i[0],i[1]])
         #move all player bullets to the right once
         for i in bullets:
             i[1] += 1
@@ -140,6 +145,8 @@ def main():
         #add new enemies
         if (seconds%random.randrange(1, 5)==0 and frame==0):
             enemys.append([random.randrange(5), random.randrange(maxyx[0]), maxyx[1]-10])
+        if (seconds%15==0 and frame==0):
+            ufos.append([random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), 1])
         #move enemies
         if(frame%3==0):
             for i in enemys:
@@ -156,6 +163,11 @@ def main():
                     i[2] = maxyx[1]-10
                 if (i[2]<20):
                     i[2] = 20
+        if(frame%30==0):
+            ufocount = len(ufos)
+            for i in range(ufocount):
+                 ufos[i] = [random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), ufos[i][2]]
+
         #detect bullet collisions
         for i in bullets1:
             if (i[0]<rocketxy[0] and i[0]>rocketxy[0]-6 and i[1]<rocketxy[1] and i[1]>rocketxy[1]-10):
@@ -174,6 +186,24 @@ def main():
                     ammo += 2
                     if ammo>20:
                         ammo = 20
+            for j in ufos:
+                if (j[0]>=i[0]-13 and j[1]>=i[1]-5 and j[0]<=i[0] and j[1]<=i[1]):
+                    if j[2]<4:
+                        j[2] += 1
+                        bullets.pop(bullets.index(i))
+                        ammo += 2
+                        if ammo>20: 
+                            ammo = 20
+                    else:
+                        bullets.pop(bullets.index(i))
+                        ufos.pop(ufos.index(j))
+                        score += 1
+                        health += 1
+                        if (health>10):
+                            health = 10
+                        ammo += 2
+                        if ammo>20:
+                            ammo = 20
         #add stars
         if (frame%random.randrange(20, 40)==0):
             stars.append([random.randrange(3), random.randrange(maxyx[0]-1), maxyx[1]-1])
@@ -198,6 +228,61 @@ def main():
         stdscr.erase()
         time.sleep(0.016)
     curses.endwin()
+
+def drawUfos(stdscr, ufos, frame):
+    maxyx = stdscr.getmaxyx()
+    curs = []
+    for ufo in ufos:
+        sprite0 = "    .---.   0  _/_____\_  0 (_________) 0             "
+        sprite1 = "    .---.   0  _/_____\_  0 (_________) 0   /      \\  "
+        sprite2 = "    .---.   0  _/_____\_  0 (_________) 0  /        \\ "
+        spritenum = frame%9+1
+        curs = [ufo[0], ufo[1]]
+        count = 0
+        if (spritenum <= 3):
+            for i in sprite0:
+                if (i==' '):
+                    count += 1
+                    curs[1] += 1
+                elif (i=='0'):
+                    curs[1] -= count
+                    curs[0] += 1
+                    count = 0
+                else:
+                    if (curs[0]>0 and curs[0]<maxyx[0] and curs[1]>0 and curs[1]<maxyx[1]):
+                        stdscr.addch(curs[0], curs[1], i)
+                    curs[1] += 1
+                    count += 1
+        elif (spritenum >= 4 and spritenum <= 6):
+            for i in sprite1:
+                 if (i==' '):
+                    count += 1
+                    curs[1] += 1
+                 elif (i=='0'):
+                    curs[1] -= count
+                    curs[0] += 1
+                    count = 0
+                 else:
+                    if (curs[0]>0 and curs[0]<maxyx[0] and curs[1]>0 and curs[1]<maxyx[1]):
+                        stdscr.addch(curs[0], curs[1], i)
+                    curs[1] += 1
+                    count += 1
+        elif (spritenum >= 7):
+            for i in sprite2:
+                if (i==' '):
+                    count += 1
+                    curs[1] += 1
+                elif (i=='0'):
+                    curs[1] -= count
+                    curs[0] += 1
+                    count = 0
+                else:
+                    if (curs[0]>0 and curs[0]<maxyx[0] and curs[1]>0 and curs[1]<maxyx[1]):
+                        stdscr.addch(curs[0], curs[1], i)
+                    curs[1] += 1
+                    count += 1
+
+    
 
 def drawBG(stdscr, stars):
     maxyx = stdscr.getmaxyx()
@@ -276,7 +361,7 @@ def drawTitle(stdscr, prevscore):
 def gameover(stdscr, score):
     #story or sum shiiid
     maxyx = stdscr.getmaxyx()
-    line0 = "Your aircraft was shot down after you took out " + str(score) + " enemy fighter planes."
+    line0 = "Your aircraft was shot down after you took out " + str(score) + " enemies."
     line1 = "Your name will soon be forgotten. As with most of your comrades."
     stdscr.clear()
     stdscr.move(math.trunc(maxyx[0]/2-1), math.trunc(maxyx[1]/2-math.trunc(len(line0)/2)))
