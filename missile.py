@@ -100,8 +100,8 @@ def main():
         #keeping rocket in bounds
         if (rocketxy[0]<5):
             rocketxy[0] = 5
-        elif (rocketxy[0]>(maxyx[0]-2)):
-                rocketxy[0] = (maxyx[0]-2)
+        elif (rocketxy[0]>(maxyx[0]-4)):
+                rocketxy[0] = (maxyx[0]-4)
         elif (rocketxy[1]<15):
                 rocketxy[1] = 15
         elif (rocketxy[1]>(maxyx[1]-12)):
