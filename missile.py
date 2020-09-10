@@ -115,7 +115,7 @@ def main():
                 j = random.randrange(100)
                 if (j%2==0):
                     bullets1.append([i[1]-2, i[2]-3])
-        if (frame%10<5):
+        if (frame%18>=9):
             for i in ufos:
                 bullets1.append([i[0],i[1]])
         #move all player bullets to the right once
@@ -163,7 +163,7 @@ def main():
                     i[2] = maxyx[1]-10
                 if (i[2]<20):
                     i[2] = 20
-        if(frame%30==0):
+        if(frame%18==0):
             ufocount = len(ufos)
             for i in range(ufocount):
                  ufos[i] = [random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), ufos[i][2]]
