@@ -111,10 +111,10 @@ def main():
             for i in enemys:
                 j = random.randrange(100)
                 if (j%2==0):
-                    bullets1.append([i[1]-2, i[2]-2])
+                    bullets1.append([i[1]-2, i[2]-3])
                 j = random.randrange(100)
                 if (j%2==0):
-                    bullets1.append([i[1]-2, i[2]-2])
+                    bullets1.append([i[1]-2, i[2]-3])
         if (frame%10<5):
             for i in ufos:
                 bullets1.append([i[0],i[1]])
@@ -174,6 +174,11 @@ def main():
                 bullets1.pop(bullets1.index(i))
                 curses.flash()
                 health -= 1
+            else:
+                for j in enemys:
+                    if (j[1]>=i[0]-2 and j[2]>=i[1]-2 and j[1]<=i[0]+2 and j[2]<=i[1]+2 ):
+                        bullets1.pop(bullets1.index(i))
+                        enemys.pop(enemys.index(j))
         for i in bullets:
             for j in enemys:
                 if (j[1]>=i[0]-2 and j[2]>=i[1]-2 and j[1]<=i[0]+2 and j[2]<=i[1]+2 ):
