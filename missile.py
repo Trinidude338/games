@@ -86,10 +86,6 @@ def main():
             ammo -= 2
             stdscr.addstr("FIRE", curses.COLOR_GREEN)
             stdscr.refresh()
-        elif (c == 'j' and frame%2!=0):
-            stdscr.move(rocketxy[0]+2, rocketxy[1]+1)
-            stdscr.addstr("Fail!", curses.COLOR_RED)
-            stdscr.refresh()
         if (c == ' '):
             while(stdscr.getch()==curses.ERR):
                 stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-3))
@@ -377,7 +373,7 @@ def gameover(stdscr, score):
     time.sleep(2)
     curses.flushinp()
     frame = 0
-    while (stdscr.getch()==curses.ERR and frame < 1200):
+    while (stdscr.getch()==curses.ERR and frame < 600):
         time.sleep(0.016)
         frame += 1
 
