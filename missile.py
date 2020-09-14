@@ -376,8 +376,10 @@ def gameover(stdscr, score):
     stdscr.refresh()
     time.sleep(2)
     curses.flushinp()
-    while (stdscr.getch()==curses.ERR):
+    frame = 0
+    while (stdscr.getch()==curses.ERR and frame < 1200):
         time.sleep(0.016)
+        frame += 1
 
 def drawUI(stdscr, health, ammo):
     stdscr.move(0, 0)
