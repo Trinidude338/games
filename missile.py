@@ -58,6 +58,7 @@ def main():
             time.sleep(0.016)
         else:
             nonplayable = False
+    curses.flushinp()
     while(dead!=True):
         if (frame>59):
             frame = 0
@@ -355,7 +356,12 @@ def drawControls(stdscr):
     controlsbox.addstr(line4)
     stdscr.refresh()
     controlsbox.refresh()
-    time.sleep(4)
+    time.sleep(1)
+    curses.flushinp()
+    frame = 0
+    while(stdscr.getch()==curses.ERR and frame < 300):
+        frame += 1
+        time.sleep(0.016)
     controlsbox.clear()
     stdscr.clear()
     controlsbox.refresh()
@@ -368,7 +374,12 @@ def drawTitle(stdscr, prevscore):
     stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
     stdscr.addstr(title)
     stdscr.refresh()
-    time.sleep(2)
+    time.sleep(1)
+    curses.flushinp()
+    frame = 0
+    while(stdscr.getch()==curses.ERR and frame < 60):
+        frame += 1
+        time.sleep(0.016)
 
 def gameover(stdscr, score):
     #story or sum shiiid
