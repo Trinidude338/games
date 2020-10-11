@@ -47,6 +47,17 @@ def main():
     drawControls(stdscr)
     for i in range(125):
         stars.append([random.randrange(3), random.randrange(maxyx[0]-1), random.randrange(maxyx[1]-1)])
+    nonplayable = True
+    while(nonplayable):
+        drawBG(stdscr, stars)
+        drawRocket(stdscr, rocketxy)
+        if (rocketxy[1]<math.trunc(maxyx[1]/2)):
+            rocketxy[1] += 2
+            stdscr.refresh()
+            stdscr.erase()
+            time.sleep(0.016)
+        else:
+            nonplayable = False
     while(dead!=True):
         if (frame>59):
             frame = 0
@@ -98,8 +109,8 @@ def main():
             rocketxy[0] = 5
         elif (rocketxy[0]>(maxyx[0]-4)):
                 rocketxy[0] = (maxyx[0]-4)
-        elif (rocketxy[1]<15):
-                rocketxy[1] = 15
+        elif (rocketxy[1]<10):
+                rocketxy[1] = 10
         elif (rocketxy[1]>(maxyx[1]-12)):
                 rocketxy[1] = (maxyx[1]-12)
         #make enemies fire
