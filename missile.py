@@ -81,7 +81,7 @@ def main():
             c = 0
         #moving, quitting, shooting, and all that stuff
         if (c == 'q'):
-            gameover(stdscr, score)
+            gameover(stdscr, score, rocketxy)
             dead = True
         if (c == 'w'):
             rocketxy[0] -= 2
@@ -235,7 +235,7 @@ def main():
                 ammo = 20
         #check if dead
         if (health<1):
-            gameover(stdscr, score)
+            gameover(stdscr, score, rocketxy)
             dead = True
         stdscr.refresh()
         stdscr.erase()
@@ -381,11 +381,12 @@ def drawTitle(stdscr, prevscore):
         frame += 1
         time.sleep(0.016)
 
-def gameover(stdscr, score):
+def gameover(stdscr, score, rocketxy):
     #story or sum shiiid
     maxyx = stdscr.getmaxyx()
     line0 = "Your aircraft was shot down after you took out " + str(score) + " enemies."
     line1 = "Your name will soon be forgotten. As with most of your comrades."
+    drawDeadRocket(stdscr, rocketxy)
     stdscr.clear()
     stdscr.move(math.trunc(maxyx[0]/2-1), math.trunc(maxyx[1]/2-math.trunc(len(line0)/2)))
     stdscr.addstr(line0)
@@ -508,6 +509,32 @@ def drawRocket(stdscr, points):
             locy = tmp[0]
             locx = tmp[1]
             stdscr.move(locy-1, locx-9)
+
+def drawDeadRocket(stdscr, points):
+    curses.flash()
+    locy = 0
+    locx = 0
+    stdscr.move(points[0],points[1])
+    for i in range(5):
+            for j in range(9):
+                    if (rocketSprite[i][j] == '0'):
+                            tmp = stdscr.getyx()
+                            locy = tmp[0]
+                            locx = tmp[1]
+                            stdscr.move(locy, locx+1)
+                    else: 
+                        if (random.randrange(10) % 3 != 0):
+                            stdscr.addch(rocketSprite[i][j])
+                        else:
+                            stdscr.addch(' ')
+            tmp = stdscr.getyx()
+            locy = tmp[0]
+            locx = tmp[1]
+            stdscr.move(locy-1, locx-9)
+    stdscr.refresh()
+    time.sleep(2)
+    curses.flash()
+
 
 if __name__ == '__main__':
     main()
