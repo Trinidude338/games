@@ -28,7 +28,28 @@ def main():
     stars = []
     bullets = []
     bullets1 = []
-    ufos = []
+    ufos = []    
+    enemys = [
+            #format:
+            #[
+            #"x", <-sprite as a string, 0 anywhere in the string corresponds to newline (str)
+            #y, <---How many characters per line (int)
+            #z <----How many lines the sprite takes up (int)
+            #]
+            ["-O%",
+            3,
+            1],
+            ["  /|0-===0  \\|",
+            4,
+            3],
+            ["-(O)",
+            4,
+            1], 
+            ["--=0  O0--=",
+            3,
+            3]
+    ]
+    spriteNum = len(enemys)
     health = 10
     ammo = 20
     prevscore = 0
@@ -60,7 +81,7 @@ def main():
         drawClouds(stdscr, clouds)
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
-            drawEnemy(stdscr, i[0], i[1], i[2])
+            drawEnemy(stdscr, enemys, i[0], i[1], i[2])
         drawUfos(stdscr, ufos, frame)
         drawRocket(stdscr, rocketxy)
         drawUI(stdscr, health, ammo)
@@ -142,7 +163,7 @@ def main():
                 clouds.pop(clouds.index(i))
         #add new enemies
         if (seconds%random.randrange(1, 5)==0 and frame==0):
-            enemys.append([random.randrange(5), random.randrange(maxyx[0]), maxyx[1]-10])
+            enemys.append([random.randrange(spriteNum), random.randrange(maxyx[0]), maxyx[1]-10])
         if (seconds%15==0 and frame==0):
             ufos.append([random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), 1])
         #move enemies
@@ -430,31 +451,8 @@ def drawUI(stdscr, health, ammo):
     stdscr.move(0, 52)
     stdscr.addch("]")
 
-def drawEnemy(stdscr, enemId, enemY, enemX):
+def drawEnemy(stdscr, enemys, enemId, enemY, enemX):
     maxyx = stdscr.getmaxyx()
-    enemys = [
-            #format:
-            #[
-            #"x", <-sprite as a string, 0 anywhere in the string corresponds to newline (str)
-            #y, <---How many characters per line (int)
-            #z <----How many lines the sprite takes up (int)
-            #]
-            ["-O%",
-            3,
-            1],
-            ["  /|0-===0  \\|",
-            4,
-            3],
-            ["-(O)",
-            4,
-            1],
-            ["fuck",
-            4,
-            1],
-            ["--=0  O0--=",
-            3,
-            3]
-            ]
     enemy = enemys[enemId]
     curs = [enemY, enemX]
     if (curs[0]<maxyx[0]-enemy[2] and curs[1]<maxyx[1]-enemy[1] and curs[0]>0 and curs[1]>0):
