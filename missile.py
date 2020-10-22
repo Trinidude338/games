@@ -8,18 +8,6 @@ import time
 import random
 
 
-#global variables because f**k you logic
-rocketSprite = [
-        ['0','0','0','|','/','0','0','0','0'],
-        ['|','/','0','|','0','/','0','0','0'],
-        ['=','=','=','=','=','=','=','=','-'],
-        ['|','\\','0','|','0','\\','0','0','0'],
-        ['0','0','0','|','\\','0','0','0','0']
-        ]
-rocketxy = []
-bullets = []
-bullets1 = []
-
 def main():
     dead = False
     stdscr = curses.initscr()
@@ -38,6 +26,8 @@ def main():
     clouds = []
     enemys = []
     stars = []
+    bullets = []
+    bullets1 = []
     ufos = []
     health = 10
     ammo = 20
@@ -179,19 +169,34 @@ def main():
         #detect bullet collisions
         for i in bullets1:
             if (i[0]<rocketxy[0] and i[0]>rocketxy[0]-6 and i[1]<rocketxy[1] and i[1]>rocketxy[1]-10):
-                bullets1.pop(bullets1.index(i))
+                try:
+                    bullets1.pop(bullets1.index(i))
+                except:
+                    pass
                 curses.flash()
                 health -= 1
             else:
                 for j in enemys:
                     if (j[1]>=i[0]-2 and j[2]>=i[1]-2 and j[1]<=i[0]+2 and j[2]<=i[1]+2 ):
-                        bullets1.pop(bullets1.index(i))
-                        enemys.pop(enemys.index(j))
+                        try:
+                            bullets1.pop(bullets1.index(i))
+                        except:
+                            pass
+                        try:
+                            enemys.pop(enemys.index(j))
+                        except:
+                            pass
         for i in bullets:
             for j in enemys:
                 if (j[1]>=i[0]-2 and j[2]>=i[1]-2 and j[1]<=i[0]+2 and j[2]<=i[1]+2 ):
-                    bullets.pop(bullets.index(i))
-                    enemys.pop(enemys.index(j))
+                    try:
+                        bullets.pop(bullets.index(i))
+                    except:
+                        pass
+                    try:
+                        enemys.pop(enemys.index(j))
+                    except:
+                        pass
                     score += 1
                     health += 1
                     if (health>10):
@@ -203,13 +208,22 @@ def main():
                 if (j[0]>=i[0]-13 and j[1]>=i[1]-5 and j[0]<=i[0] and j[1]<=i[1]):
                     if j[2]<4:
                         j[2] += 1
-                        bullets.pop(bullets.index(i))
+                        try:
+                            bullets.pop(bullets.index(i))
+                        except:
+                            pass
                         ammo += 2
                         if ammo>20: 
                             ammo = 20
                     else:
-                        bullets.pop(bullets.index(i))
-                        ufos.pop(ufos.index(j))
+                        try:
+                            bullets.pop(bullets.index(i))
+                        except:
+                            pass
+                        try:
+                            ufos.pop(ufos.index(j))
+                        except:
+                            pass
                         score += 1
                         health += 1
                         if (health>10):
@@ -493,6 +507,13 @@ def drawBullets(stdscr, points, points1):
         stdscr.addch("-")
 
 def drawRocket(stdscr, points):
+    rocketSprite = [
+            ['0','0','0','|','/','0','0','0','0'],
+            ['|','/','0','|','0','/','0','0','0'],
+            ['=','=','=','=','=','=','=','=','-'],
+            ['|','\\','0','|','0','\\','0','0','0'],
+            ['0','0','0','|','\\','0','0','0','0']
+    ]
     locy = 0
     locx = 0
     stdscr.move(points[0],points[1])
@@ -511,6 +532,13 @@ def drawRocket(stdscr, points):
             stdscr.move(locy-1, locx-9)
 
 def drawDeadRocket(stdscr, points):
+    rocketSprite = [
+            ['0','0','0','|','/','0','0','0','0'],
+            ['|','/','0','|','0','/','0','0','0'],
+            ['=','=','=','=','=','=','=','=','-'],
+            ['|','\\','0','|','0','\\','0','0','0'],
+            ['0','0','0','|','\\','0','0','0','0']
+    ]
     curses.flash()
     locy = 0
     locx = 0
