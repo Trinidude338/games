@@ -29,7 +29,7 @@ def main():
     bullets = []
     bullets1 = []
     ufos = []    
-    enemys = [
+    enemysSpriteList = [
             #format:
             #[
             #"x", <-sprite as a string, 0 anywhere in the string corresponds to newline (str)
@@ -49,7 +49,7 @@ def main():
             3,
             3]
     ]
-    spriteNum = len(enemys)
+    spriteNum = int(len(enemysSpriteList))
     health = 10
     ammo = 20
     prevscore = 0
@@ -81,7 +81,7 @@ def main():
         drawClouds(stdscr, clouds)
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
-            drawEnemy(stdscr, enemys, i[0], i[1], i[2])
+            drawEnemy(stdscr, enemysSpriteList, i[0], i[1], i[2])
         drawUfos(stdscr, ufos, frame)
         drawRocket(stdscr, rocketxy)
         drawUI(stdscr, health, ammo)
