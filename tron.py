@@ -20,6 +20,7 @@ def main():
     p1trail = list()
     p2trail = list()
     dead = False
+    quit = False
     while(not dead):
         stdscr.box()
         drawPlayerTrail(stdscr, p1trail, 0)
@@ -33,6 +34,7 @@ def main():
         if (c==ord('q')):
             curses.endwin()
             exit(0)
+            quit = True
         if (c==ord(' ')):
             while (stdscr.getch()==curses.ERR):
                 stdscr.addstr(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2)-3, "PAUSED")
@@ -89,7 +91,8 @@ def main():
         stdscr.refresh()
         stdscr.erase()
         time.sleep(0.08)
-    gameover(stdscr, winner)
+    if(not quit):
+        gameover(stdscr, winner)
     stdscr.refresh()
     curses.endwin()
     exit(0)
