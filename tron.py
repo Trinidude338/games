@@ -31,7 +31,8 @@ def main():
         except:
             c = -1
         if (c==ord('q')):
-            dead = True
+            curses.endwin()
+            exit(0)
         if (c==ord(' ')):
             while (stdscr.getch()==curses.ERR):
                 stdscr.addstr(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2)-3, "PAUSED")
