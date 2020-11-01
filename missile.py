@@ -23,6 +23,7 @@ def main():
     frame = 0
     seconds = 0
     score = 0
+    half = 0
     clouds = []
     enemys = []
     stars = []
@@ -32,23 +33,29 @@ def main():
     enemysSpriteList = [
             #format:
             #[
-            #"x", <-sprite as a string, 0 anywhere in the string corresponds to newline (str)
-            #y, <---How many characters per line (int)
-            #z <----How many lines the sprite takes up (int)
+            #"x","y" <----  sprite as two strings, 0 anywhere in the string corresponds to newline (str)
+            #y, <---------  How many characters per line (int)
+            #z <----------  How many lines the sprite takes up (int)
             #]
-            ["-O%",
+            ["-OK", "-O ",
             3,
             1],
-            ["  /|0-===0  \\|",
+            ["  /|0-===0  \\|", "  /K0-===0  \\K",
             4,
             3],
-            ["-(O)",
+            ["-(O)", "-(X)",
             4,
             1], 
-            ["--=0  O0--=",
+            ["--=0  O0--=", "--=0  X0--=",
             3,
+            3],
+            ["   /  0 -=<=-<0   \\  ", "   /- 0 -=<=-K0   \\- ",
+            6,
+            3],
+            [" /| 0< | 0 \| ", " /|_0< |_0 \| ",
+            4,
             3]
-    ]
+            ]
     spriteNum = int(len(enemysSpriteList))
     health = 10
     ammo = 20
@@ -81,7 +88,7 @@ def main():
         drawClouds(stdscr, clouds)
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
-            drawEnemy(stdscr, enemysSpriteList, i[0], i[1], i[2])
+            drawEnemy(stdscr, enemysSpriteList, i[0], i[1], i[2], half)
         drawUfos(stdscr, ufos, frame)
         drawRocket(stdscr, rocketxy)
         drawUI(stdscr, health, ammo)
@@ -268,6 +275,11 @@ def main():
             ammo += 2
             if ammo>20:
                 ammo = 20
+        #weird misc stuff
+        if (frame%30<15):
+            half = 0
+        else:
+            half = 1
         #check if dead
         if (health<1):
             gameover(stdscr, score, rocketxy)
@@ -451,13 +463,13 @@ def drawUI(stdscr, health, ammo):
     stdscr.move(0, 52)
     stdscr.addch("]")
 
-def drawEnemy(stdscr, enemys, enemId, enemY, enemX):
+def drawEnemy(stdscr, enemys, enemId, enemY, enemX, sprite):
     maxyx = stdscr.getmaxyx()
     enemy = enemys[enemId]
     curs = [enemY, enemX]
-    if (curs[0]<maxyx[0]-enemy[2] and curs[1]<maxyx[1]-enemy[1] and curs[0]>0 and curs[1]>0):
+    if (curs[0]<maxyx[0]-enemy[3] and curs[1]<maxyx[1]-enemy[2] and curs[0]>0 and curs[1]>0):
         count = 0
-        for i in enemy[0]:
+        for i in enemy[sprite]:
             if (i == ' '):
                 count += 1
                 curs[1] += 1
