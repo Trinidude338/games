@@ -70,7 +70,9 @@ def main():
             flappyPos[0] = 0
             upthrustFlappy /= 2
         for i in tubes:
-            if (flappyPos[0]-1<i[0][0] and flappyPos[0]-2<i[0][0] and flappyPos[1]>i[0][1]-7 and flappyPos[1]+7<i[0][1]+7 or flappyPos[0]-7>i[1][0] and flappyPos[0]-8>i[1][0] and flappyPos[1]>i[1][1]-7 and flappyPos[1]+7<i[1][1]+7):
+            if (flappyPos[0]<i[0][0] and flappyPos[1]+6>=i[0][1]-9 and flappyPos[1]+6<=i[0][1]+9 or flappyPos[0]+8>i[1][0] and flappyPos[1]+6>=i[1][1]-9 and flappyPos[1]+6<=i[1][1]+9):
+                time.sleep(3)
+                curses.flash()
                 gameover(stdscr, score)
                 dead = True
         score = 0
@@ -78,6 +80,8 @@ def main():
             if (flappyPos[1]>i[0][1]):
                 score += 1
         if (flappyPos[0]>maxyx[0]):
+            time.sleep(3)
+            curses.flash()
             gameover(stdscr, score)
             dead = True
         #
