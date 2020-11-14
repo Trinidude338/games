@@ -23,28 +23,28 @@ def main():
     mapStr.append("#..................#")
     mapStr.append("#..................#")
     mapStr.append("#..................#")
-    mapStr.append("#....##............#")
+    mapStr.append("#######............#")
     mapStr.append("#..................#")
-    mapStr.append("#............##....#")
-    mapStr.append("#..................#")
-    mapStr.append("#..................#")
-    mapStr.append("#......##..........#")
+    mapStr.append("#............#######")
     mapStr.append("#..................#")
     mapStr.append("#..................#")
     mapStr.append("#..................#")
     mapStr.append("#..................#")
+    mapStr.append("######.............#")
     mapStr.append("#..................#")
-    mapStr.append("#...........##.....#")
-    mapStr.append("#...##.............#")
+    mapStr.append("#............#######")
     mapStr.append("#..................#")
-    mapStr.append("#..................#")
+    mapStr.append("#........#.........#")
+    mapStr.append("#.......#..........#")
+    mapStr.append("#......#...........#")
+    mapStr.append("#.....#............#")
     mapStr.append("####################")
     frame = 0
     seconds = 0
     score = 0
     playerPos = [10.0, 10.0]
     playerA = 0.0
-    playerFOV = 3.14159 / 4.0
+    playerFOV = 3.14159 / 1.75
     drawTitle(stdscr)
     drawControls(stdscr)
     elapsed = 0
@@ -54,7 +54,6 @@ def main():
             seconds += 1
         else:
             frame += 1
-        elapsed0 = time.time()
         #draw frame
         drawWalls(stdscr, mapStr, playerPos, playerA, playerFOV)
         #keyboard input
@@ -79,11 +78,9 @@ def main():
                 playerPos[0] += math.sin(playerA)
                 playerPos[1] += math.cos(playerA)
         if (c == 'a'):
-            playerA -= 0.1 / 10
+            playerA -= 0.1 / 1
         if (c == 'd'):
-            playerA += 0.1 / 10
-        elapsed1 = time.time()
-        elapsed = elapsed0 - elapsed1
+            playerA += 0.1 / 1
         stdscr.refresh()
         stdscr.erase()
         time.sleep(0.016)
