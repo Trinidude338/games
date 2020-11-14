@@ -19,30 +19,50 @@ def main():
     curses.curs_set(0)
     maxyx = stdscr.getmaxyx()
     mapStr = []
-    mapStr.append("####################")
-    mapStr.append("#..................#")
-    mapStr.append("#..................#")
-    mapStr.append("#..................#")
-    mapStr.append("#######............#")
-    mapStr.append("#..................#")
-    mapStr.append("#............#######")
-    mapStr.append("#..................#")
-    mapStr.append("#..................#")
-    mapStr.append("#..................#")
-    mapStr.append("#..................#")
-    mapStr.append("######.............#")
-    mapStr.append("#..................#")
-    mapStr.append("#............#######")
-    mapStr.append("#..................#")
-    mapStr.append("#........#.........#")
-    mapStr.append("#.......#..........#")
-    mapStr.append("#......#...........#")
-    mapStr.append("#.....#............#")
-    mapStr.append("####################")
+    mapStr.append("############################################################")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................#...........................#")
+    mapStr.append("#..............................##################..........#")
+    mapStr.append("#####################......................................#")
+    mapStr.append("#...................#......................................#")
+    mapStr.append("#...................#......................................#")
+    mapStr.append("#...................#.......................################")
+    mapStr.append("#...................#.......................#..............#")
+    mapStr.append("#...................#.......................#..............#")
+    mapStr.append("#..........................................................#")
+    mapStr.append("############...............................................#")
+    mapStr.append("#..........#................................#..............#")
+    mapStr.append("#..........#................................#..............#")
+    mapStr.append("#..........#................................#..............#")
+    mapStr.append("#...........................................################")
+    mapStr.append("#..........................................................#")
+    mapStr.append("#..........#...............................................#")
+    mapStr.append("#..........#...............................................#")
+    mapStr.append("#..........#.............#..#..#..#..#..#..................#")
+    mapStr.append("#..........#...............................................#")
+    mapStr.append("#..........#.............#..#..#..#..#..#..................#")
+    mapStr.append("############...............................................#")
+    mapStr.append("#..........................................................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("#...................###########............................#")
+    mapStr.append("############################################################")
     frame = 0
     seconds = 0
     score = 0
-    playerPos = [10.0, 10.0]
+    playerPos = [20.0, 20.0]
     playerA = 0.0
     playerFOV = 3.14159 / 1.75
     drawTitle(stdscr)
@@ -66,21 +86,22 @@ def main():
             gameover(stdscr)
             dead = True
         if (c == 'w'):
-            playerPos[0] += math.sin(playerA)
-            playerPos[1] += math.cos(playerA)
-            if (mapStr[int(playerPos[0])][int(playerPos[1])]=='#'):
-                playerPos[0] -= math.sin(playerA)
-                playerPos[1] -= math.cos(playerA)
+            playerPos[0] += math.sin(playerA)/3
+            playerPos[1] += math.cos(playerA)/3
+            if (mapStr[int(playerPos[1])][int(playerPos[0])]=='#'):
+                playerPos[0] -= math.sin(playerA)/3
+                playerPos[1] -= math.cos(playerA)/3
         if (c == 's'):
-            playerPos[0] -= math.sin(playerA)
-            playerPos[1] -= math.cos(playerA)
-            if (mapStr[int(playerPos[0])][int(playerPos[1])]=='#'):
-                playerPos[0] += math.sin(playerA)
-                playerPos[1] += math.cos(playerA)
+            playerPos[0] -= math.sin(playerA)/3
+            playerPos[1] -= math.cos(playerA)/3
+            if (mapStr[int(playerPos[1])][int(playerPos[0])]=='#'):
+                playerPos[0] += math.sin(playerA)/3
+                playerPos[1] += math.cos(playerA)/3
         if (c == 'a'):
             playerA -= 0.1 / 1
         if (c == 'd'):
             playerA += 0.1 / 1
+        curses.flushinp()
         stdscr.refresh()
         stdscr.erase()
         time.sleep(0.016)
@@ -88,7 +109,7 @@ def main():
 
 def drawWalls(stdscr, mapStr, playerPos, playerA, playerFOV):
     maxyx = stdscr.getmaxyx()
-    depth = 16.0
+    depth = 30.0
     curs = [0, 0]
     for curs[1] in range(maxyx[1]):
         rayAngle = (playerA - playerFOV / 2.0) + (curs[1] / maxyx[1]) * playerFOV
