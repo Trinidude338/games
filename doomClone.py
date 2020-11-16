@@ -110,7 +110,9 @@ def main():
 def drawWalls(stdscr, mapStr, playerPos, playerA, playerFOV):
     maxyx = stdscr.getmaxyx()
     depth = 30.0
+    prevNstr = list([0])
     curs = [0, 0]
+    rayArr = []
     for curs[1] in range(maxyx[1]):
         rayAngle = (playerA - playerFOV / 2.0) + (curs[1] / maxyx[1]) * playerFOV
         distanceToWall = 0
@@ -126,21 +128,12 @@ def drawWalls(stdscr, mapStr, playerPos, playerA, playerFOV):
             else:
                 if (mapStr[int(testPos[1])][int(testPos[0])]=='#'):
                     hitWall = True
+                    nStr = (int(testPos[1])*len(mapStr[0])+int(testPos[0]))
+                    if (nStr!=prevNstr[-1]):
+                        rayArr.append(curs[1])
+                    prevNstr.append(nStr)
         ceiling = (maxyx[0]/2) - maxyx[0] / distanceToWall
         floor = maxyx[0] - ceiling
-        shade = ' '
-        if (boundary):
-            shade = '|'
-        elif (distanceToWall<=depth/4.0):
-            shade = '#'
-        elif (distanceToWall<depth/3.0):
-            shade = 'X'
-        elif (distanceToWall<depth/2.0):
-            shade = 'O'
-        elif (distanceToWall<depth):
-            shade = '.'
-        else:
-            shade = ' '
         for curs[0] in range(maxyx[0]):
             if (curs[0]<ceiling):
                 try:
@@ -148,12 +141,25 @@ def drawWalls(stdscr, mapStr, playerPos, playerA, playerFOV):
                 except:
                     pass
             elif (curs[0]>ceiling and curs[0]<=floor):
+                if (curs[1] in rayArr and distanceToWall<depth/2.0):
+                    boundary = True
+                if (boundary):
+                    shade = '|'
+                elif (distanceToWall<=depth/4.0):
+                    shade = '#'
+                elif (distanceToWall<depth/3.0):
+                    shade = 'X'
+                elif (distanceToWall<depth/2.0):
+                    shade = 'O'
+                elif (distanceToWall<depth):
+                    shade = '.'
+                else:
+                    shade = ' '
                 try:
                     stdscr.addch(curs[0], curs[1], shade)
                 except:
                     pass
             else:
-                shade = ' '
                 b = 1.0 - ((curs[0]-maxyx[0]/2.0)/(maxyx[0]/2.0))
                 if (b < 0.25):
                     shade = '='
