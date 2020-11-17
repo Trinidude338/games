@@ -96,8 +96,10 @@ def success(stdscr):
     stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2-len(line0)/2), line0)
     time.sleep(1)
     curses.flushinp()
+    frame = 0
     while(stdscr.getch()==curses.ERR and frame<300):
         time.sleep(0.016)
+        frame += 1
 
 def drawMap(stdscr, mapStr, toggle, pos):
     maxyx = stdscr.getmaxyx()
