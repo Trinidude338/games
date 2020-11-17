@@ -104,15 +104,16 @@ def success(stdscr):
 
 def drawMap(stdscr, mapStr, toggle, pos):
     maxyx = stdscr.getmaxyx()
+    newMap = []
+    for i in mapStr:
+        newMap.append("".join(reversed(i)))
     curs = [1, 1]
     if (toggle==0):
         return
     else:
-        for i in mapStr:
+        for i in newMap:
             for j in i:
-                if (j=='P'):
-                    pass
-                elif (j=='.' or j=='X'):
+                if (j=='.' or j=='X' or j=='P'):
                     try:
                         stdscr.addch(curs[0], curs[1], ' ')
                     except:
@@ -126,31 +127,31 @@ def drawMap(stdscr, mapStr, toggle, pos):
             curs[0] += 1
             curs[1] = 1
         curs[0] = 0
-        for curs[1] in range(len(mapStr[0])+1):
+        for curs[1] in range(len(newMap[0])+1):
             try:
                 stdscr.addch(curs[0], curs[1], ' ')
             except:
                 pass
         curs[1] = 0
-        for curs[0] in range(len(mapStr)+1):
+        for curs[0] in range(len(newMap)+1):
             try:
                 stdscr.addch(curs[0], curs[1], ' ')
             except:
                 pass
-        curs[1] = len(mapStr[0])+1
-        for curs[0] in range(len(mapStr)+1):
+        curs[1] = len(newMap[0])+1
+        for curs[0] in range(len(newMap)+1):
             try:
                 stdscr.addch(curs[0], curs[1], ' ')
             except:
                 pass
-        curs[0] = len(mapStr)+1
-        for curs[1] in range(len(mapStr[0])+2):
+        curs[0] = len(newMap)+1
+        for curs[1] in range(len(newMap[0])+2):
             try:
                 stdscr.addch(curs[0], curs[1], ' ')
             except:
                 pass
         try:
-            stdscr.addch(int(pos[1])+1, int(pos[0])+1, 'P')
+            stdscr.addch(int(pos[1])+1, int(len(newMap[0])-int(pos[0])), 'P')
         except:
             pass
 
