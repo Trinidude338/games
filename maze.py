@@ -93,7 +93,7 @@ def main():
 def success(stdscr):
     maxyx = stdscr.getmaxyx()
     line0 = "Success"
-    stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2)-len(line0))
+    stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2)-len(line0)/2, line0)
     time.sleep(1)
     curses.flushinp()
     while(stdscr.getch()==curses.ERR and frame<300):
