@@ -82,10 +82,22 @@ def main():
             playerA -= 0.1 / 1
         if (c == 'd'):
             playerA += 0.1 / 1
+        if (int(playerPos[1])==14 and int(playerPos[0])==25):
+            success(stdscr)
+            dead = True
         stdscr.refresh()
         stdscr.erase()
         time.sleep(0.016)
     curses.endwin()
+
+def success(stdscr):
+    maxyx = stdscr.getmaxyx()
+    line0 = "Success"
+    stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2)-len(line0))
+    time.sleep(1)
+    curses.flushinp()
+    while(stdscr.getch()==curses.ERR and frame<300):
+        time.sleep(0.016)
 
 def drawMap(stdscr, mapStr, toggle, pos):
     maxyx = stdscr.getmaxyx()
