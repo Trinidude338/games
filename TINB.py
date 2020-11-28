@@ -22,7 +22,7 @@ def main():
     seconds = 0
     direc = 0
     thrust = [0.0, 0.0, 0.0]
-    playerPos = [math.trunc(maxyx[0]/2), 2]
+    playerPos = [math.trunc(maxyx[0]/2), math.trunc(maxyx[1]*1/3)]
     ThaBigG = 1
     terrain = genTerrain(stdscr)
     drawTitle(stdscr)
@@ -56,15 +56,23 @@ def main():
             thrust[0] = 4
         if (c=='j'):
             if (direc==0):
-                bullets.append([playerPos[0]+3, playerPos[1]+12, 0, random.randrange(2)])
+                bullets.append([playerPos[0]+3, playerPos[1]+12, 0, random.randrange(2), 0])
             else:
-                bullets.append([playerPos[0]+3, playerPos[1]-1, 1, random.randrange(2)])
+                bullets.append([playerPos[0]+3, playerPos[1]-1, 1, random.randrange(2), 0])
+        if (c=='r'):
+            terrain = genTerrain(stdscr)
+            playerPos = [math.trunc(maxyx[0]/2), math.trunc(maxyx[1]*1/3)]
         if (c=='p'):
             while(stdscr.getch()==curses.ERR):
                 stdscr.addstr(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-3), "PAUSED")
                 stdscr.refresh()
                 time.sleep(0.016)
         #game loop stuff
+        for i in bullets:
+            if (i[4]<50):
+                i[4] += 1
+            else:
+                bullets.pop(bullets.index(i))
         for i in bullets:
             if (i[3]==0):
                 if (random.randrange(20)==0):
@@ -74,31 +82,30 @@ def main():
                     i[0] -= 1
         for j in terrain:
             for i in bullets:
+                if (i[0]==j[0] and i[1]==j[1]):
+                    bullets.pop(bullets.index(i))
+                    terrain.pop(terrain.index(j))
+        for j in terrain:
+            for i in bullets:
                 if (i[3]==0):
-                    if (i[1]>=j[1] and i[1]+3<=j[1] and i[0]==j[0] and i[0]==j[0]):
-                        try:
-                            bullets.pop(bullets.index(i))
-                            terrain.pop(terrain.index(j))
-                        except:
-                            pass
+                    if (i[1]<=j[1] and i[1]+5>=j[1] and i[0]==j[0] and i[0]==j[0]):
+                        bullets.pop(bullets.index(i))
+                        terrain.pop(terrain.index(j))
                 else:
-                    if (i[1]>=j[1] and i[1]-3<=j[1] and i[0]==j[0] and i[0]==j[0]):
-                        try:
-                            bullets.pop(bullets.index(i))
-                            terrain.pop(terrain.index(j))
-                        except:
-                            pass
+                    if (i[1]<=j[1] and i[1]-5>=j[1] and i[0]==j[0] and i[0]==j[0]):
+                        bullets.pop(bullets.index(i))
+                        terrain.pop(terrain.index(j))
         for i in bullets:
             if (i[2]==0):
                 i[1] += 3
             else:
                 i[1] -= 3
-        if (playerPos[1]<6):
-            playerPos[1] = 6
+        if (playerPos[1]<math.trunc(maxyx[1]*1/3)):
+            playerPos[1] = math.trunc(maxyx[1]*1/3)
             for i in terrain:
                 i[1] += 1
-        if (playerPos[1]>maxyx[1]-12):
-            playerPos[1] = maxyx[1]-12
+        if (playerPos[1]>math.trunc(maxyx[1]*2/3)):
+            playerPos[1] = math.trunc(maxyx[1]*2/3)
             for i in terrain:
                 i[1] -= 1
         ThaBigG += 0.3
@@ -150,9 +157,24 @@ def drawTerrain(stdscr, terrain):
 def genTerrain(stdscr):
     maxyx = stdscr.getmaxyx()
     lst = []
+    n = 0
     for x in range(-500, 1000):
-        for y in range(maxyx[0]-random.randrange(6, 8), maxyx[0]+4):
+        for y in range(maxyx[0]-6+math.trunc(4*math.sin(n)), maxyx[0]+4):
             lst.append([y, x, chr(random.randrange(35, 38))])
+        if (x%75==0):
+            n += 1
+    for x in range(-500, 1000):
+        for y in range(0, 6+math.trunc(4*math.sin(n))):
+            lst.append([y, x, chr(random.randrange(35, 38))])
+        if (x%75==0):
+            n += 1
+    for x in range(-500, 1000, 72):
+        for y in range(math.trunc(maxyx[0]*2/3), math.trunc(maxyx[0]-1)):
+            lst.append([y, x, chr(random.randrange(35, 38))])
+            lst.append([y, x+1, chr(random.randrange(35, 38))])
+            lst.append([y, x+2, chr(random.randrange(35, 38))])
+            lst.append([y, x+3, chr(random.randrange(35, 38))])
+            lst.append([y, x+4, chr(random.randrange(35, 38))])
     return lst
 
 
@@ -237,6 +259,7 @@ def drawControls(stdscr):
     line2 = "w, a, s, d - Move"
     line3 = "j - Shoot"
     line4 = "p - Pause"
+    line5 = "r - Reset map"
     controlsbox.move(math.trunc(maxyx1[0]/2)-5, math.trunc(maxyx1[1]/2-len(line0)/2))
     controlsbox.addstr(line0)
     controlsbox.move(math.trunc(maxyx1[0]/2)-1, math.trunc(maxyx1[1]/2-len(line1)/2))
@@ -247,6 +270,8 @@ def drawControls(stdscr):
     controlsbox.addstr(line3)
     controlsbox.move(math.trunc(maxyx1[0]/2)+5, math.trunc(maxyx1[1]/2-len(line4)/2))
     controlsbox.addstr(line4)
+    controlsbox.move(math.trunc(maxyx1[0]/2)+7, math.trunc(maxyx1[1]/2-len(line5)/2))
+    controlsbox.addstr(line5)
     stdscr.refresh()
     controlsbox.refresh()
     time.sleep(1)
@@ -263,7 +288,7 @@ def drawControls(stdscr):
 
 def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
-    title = "TINB"
+    title = "This is not Broforce"
     stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
     stdscr.addstr(title)
     stdscr.refresh()
