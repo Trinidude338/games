@@ -12,3 +12,7 @@ Here are some games I've made out of boredom:
 - Tron - Two player game that wherever you go a trail follows you, if you touch the other players trail or the wall, you lose.
 
 - Doom Clone - ncurses 3D engine, soon to be first person shooter.
+
+- Maze - You're trapped in a maze :O, better find a way out quick :D. 
+
+- This is Not BroForce - Use your gun to shoot through the terrain and get through the map.
