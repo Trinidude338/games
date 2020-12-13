@@ -1,10 +1,3 @@
-#
-<<<<<<< HEAD
-#   Chess
-=======
-#  chess
->>>>>>> 56a67487b2d9a632da56ba14c681f1a3f243dbf5
-#
 import curses
 import math
 import time
