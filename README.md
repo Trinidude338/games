@@ -16,3 +16,5 @@ Here are some games I've made out of boredom:
 - Maze - You're trapped in a maze :O, better find a way out quick :D. 
 
 - This is Not BroForce - Use your gun to shoot through the terrain and get through the map.
+
+- Chess - A board game of strategy for two.
