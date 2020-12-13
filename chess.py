@@ -127,10 +127,16 @@ def genMoves(chessBoard, chessPiece):
             for i in range(chessPiece[2]-8, -1, -8):
                 if (chessBoard[i][1]==1):
                     break
+                elif(chessBoard[i][1]==2):
+                    moves.append(i)
+                    break
                 else:
                     moves.append(i)
             for i in range(chessPiece[2]+8, 64, 8):
                 if (chessBoard[i][1]==1):
+                    break
+                elif(chessBoard[i][1]==2):
+                    moves.append(i)
                     break
                 else:
                     moves.append(i)
@@ -193,10 +199,16 @@ def genMoves(chessBoard, chessPiece):
             for i in range(chessPiece[2]-8, -1, -8):
                 if (chessBoard[i][1]==1):
                     break
+                elif(chessBoard[i][1]==2):
+                    moves.append(i)
+                    break
                 else:
                     moves.append(i)
             for i in range(chessPiece[2]+8, 64, 8):
                 if (chessBoard[i][1]==1):
+                    break
+                elif(chessBoard[i][1]==2):
+                    moves.append(i)
                     break
                 else:
                     moves.append(i)
@@ -269,10 +281,16 @@ def genMoves(chessBoard, chessPiece):
             for i in range(chessPiece[2]-8, -1, -8):
                 if (chessBoard[i][1]==2):
                     break
+                elif(chessBoard[i][1]==1):
+                    moves.append(i)
+                    break
                 else:
                     moves.append(i)
             for i in range(chessPiece[2]+8, 64, 8):
                 if (chessBoard[i][1]==2):
+                    break
+                elif(chessBoard[i][1]==1):
+                    moves.append(i)
                     break
                 else:
                     moves.append(i)
@@ -335,10 +353,16 @@ def genMoves(chessBoard, chessPiece):
             for i in range(chessPiece[2]-8, -1, -8):
                 if (chessBoard[i][1]==2):
                     break
+                elif(chessBoard[i][1]==1):
+                    moves.append(i)
+                    break
                 else:
                     moves.append(i)
             for i in range(chessPiece[2]+8, 64, 8):
                 if (chessBoard[i][1]==2):
+                    break
+                elif(chessBoard[i][1]==1):
+                    moves.append(i)
                     break
                 else:
                     moves.append(i)
