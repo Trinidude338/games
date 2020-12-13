@@ -1,5 +1,5 @@
 #
-#   flappy bird
+#  chess
 #
 import curses
 import math
