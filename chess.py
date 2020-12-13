@@ -1,5 +1,9 @@
 #
+<<<<<<< HEAD
+#   Chess
+=======
 #  chess
+>>>>>>> 56a67487b2d9a632da56ba14c681f1a3f243dbf5
 #
 import curses
 import math
@@ -8,7 +12,6 @@ import random
 
 
 def main():
-    dead = False
     stdscr = curses.initscr()
     curses.start_color()
     curses.raw()
@@ -18,23 +21,22 @@ def main():
     stdscr.keypad(True)
     curses.curs_set(0)
     maxyx = stdscr.getmaxyx()
-    if (maxyx[0]<81 and maxyx[1]<49):
+    if (maxyx[0]<60 or maxyx[1]<80):
         screenTooSmall(stdscr)
         curses.endwin()
         exit(1)
-    moves = []
-    walls = [0, 8, 16, 32, 40, 48, 56, 7, 15, 23, 31, 39, 47, 55, 63]
+    chessPiece = [0, 0, 0]
+    chessBoard = genChessBoard()
+    moves = genMoves(chessBoard, chessPiece)
     frame = 0
     seconds = 0
     blink = 0
     offset = 30
     whosTurnIsIt = 0
-    chessBoard = genChessBoard()
     chessCurs = 35
-    chessPiece = [0, 0, 0]
     drawTitle(stdscr)
     drawControls(stdscr)
-    while(dead!=True):
+    while(1):
         if (frame>59):
             frame = 0
             seconds += 1
@@ -54,7 +56,7 @@ def main():
             break
         elif(c==' ' and chessBoard[chessCurs][1]==whosTurnIsIt+1):
             chessPiece = [chessBoard[chessCurs][0], chessBoard[chessCurs][1], chessCurs]
-        elif(c==chr(10) or c==chr(13) and chessCurs in moves):
+        elif(not chessPiece==[0, 0, 0] and (c==chr(10) or c==chr(13)) and chessCurs in moves):
             if(whosTurnIsIt==0):
                 whosTurnIsIt = 1
             else:
@@ -63,19 +65,19 @@ def main():
             chessBoard[chessCurs] = [chessPiece[0], chessPiece[1]]
             chessPiece = [0, 0, 0]
         elif(c==curses.KEY_UP):
-            frame = 59
+            frame = 50
             if(chessCurs>7):
                 chessCurs -= 8
         elif(c==curses.KEY_DOWN):
-            frame = 59
+            frame = 50
             if(chessCurs<56):
                 chessCurs += 8
         elif(c==curses.KEY_LEFT):
-            frame = 59
+            frame = 50
             if(chessCurs>0):
                 chessCurs -= 1
         elif(c==curses.KEY_RIGHT):
-            frame = 59
+            frame = 50
             if(chessCurs<63):
                 chessCurs += 1
         #game loop stuff
@@ -83,84 +85,325 @@ def main():
             blink = 1
         else:
             blink = 0
-        moves = []
-        if (chessPiece[1]==1):
-            if(chessPiece[0]==1):
-                if(chessBoard[chessPiece[2]-8]==[0, 0]):
-                    moves.append(chessPiece[2]-8)
-                if(chessBoard[chessPiece[2]-7][1]==2):
-                    moves.append(chessPiece[2]-7)
-                if(chessBoard[chessPiece[2]-9][1]==2):
-                    moves.append(chessPiece[2]-9)
-            elif(chessPiece[0]==2):
-                for i in range(chessPiece[2]-8, -1, -8):
-                    if (chessBoard[i][1]==1):
-                        break
-                    else:
-                        moves.append(i)
-                for i in range(chessPiece[2]+8, 64, 8):
-                    if (chessBoard[i][1]==1):
-                        break
-                    else:
-                        moves.append(i)
-                for i in range(chessPiece[2]+1, chessPiece[2]+int(8)):
-                    if (i>63 or chessBoard[i][1]==1):
-                        break
-                    elif (i in walls):
-                        moves.append(i)
-                        break
-                    else:
-                        moves.append(i)
-                for i in range(chessPiece[2]-1, chessPiece[2]-int(8), -1):
-                    if (i<0 or chessBoard[i][1]==1):
-                        break
-                    elif (i in walls):
-                        moves.append(i)
-                        break
-                    else:
-                        moves.append(i)
-        elif (chessPiece[1]==2):
-            if(chessPiece[0]==1):
-                if(chessBoard[chessPiece[2]+8]==[0, 0]):
-                    moves.append(chessPiece[2]+8)
-                if(chessBoard[chessPiece[2]+7][1]==1):
-                    moves.append(chessPiece[2]+7)
-                if(chessBoard[chessPiece[2]+9][1]==1):
-                    moves.append(chessPiece[2]+9)
-            elif(chessPiece[0]==2):
-                for i in range(chessPiece[2]-8, -1, -8):
-                    if (chessBoard[i][1]==2):
-                        break
-                    else:
-                        moves.append(i)
-                for i in range(chessPiece[2]+8, 64, 8):
-                    if (chessBoard[i][1]==2):
-                        break
-                    else:
-                        moves.append(i)
-                for i in range(chessPiece[2]+1, chessPiece[2]+int(8)):
-                    if (i>63 or chessBoard[i][1]==2):
-                        break
-                    elif (i in walls):
-                        moves.append(i)
-                        break
-                    else:
-                        moves.append(i)
-                for i in range(chessPiece[2]-1, chessPiece[2]-int(8), -1):
-                    if (i<0 or chessBoard[i][1]==2):
-                        break
-                    elif (i in walls):
-                        moves.append(i)
-                        break
-                    else:
-                        moves.append(i)
-        else:
-            pass
+        moves = genMoves(chessBoard, chessPiece)
+        if([6, 1] not in chessBoard):
+            checkmate(stdscr, 1)
+            break
+        if([6, 2] not in chessBoard):
+            checkmate(stdscr, 0)
+            break
         #
         stdscr.refresh()
         time.sleep(0.016)
         stdscr.erase()
     curses.endwin()
+
+def checkmate(stdscr, winner):
+    maxyx = stdscr.getmaxyx()
+    stdscr.erase()
+    if (winner==0):
+        line0 = "X won by Checkmate!(kinda)"
+    else:
+        line0 = "O won by Checkmate!(kinda)"
+    stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2-len(line0)/2), line0)
+    stdscr.refresh()
+    time.sleep(4)
+
+def genMoves(chessBoard, chessPiece): 
+    moves = []
+    walls = [0, 8, 16, 32, 40, 48, 56, 7, 15, 23, 31, 39, 47, 55, 63]
+    knightArr = [15, 17, 6, 10]
+    kingArr = [1, 7, 8, 9]
+    pawnArr = []
+    for i in range(8, 16):
+        pawnArr.append([i, i+16])
+    for i in range(48, 56):
+        pawnArr.append([i, i-16])
+    if (chessPiece[1]==1):
+        if(chessPiece[0]==1):
+            if(chessBoard[chessPiece[2]-8]==[0, 0]):
+                moves.append(chessPiece[2]-8)
+            if(chessBoard[chessPiece[2]-7][1]==2):
+                moves.append(chessPiece[2]-7)
+            if(chessBoard[chessPiece[2]-9][1]==2):
+                moves.append(chessPiece[2]-9)
+            for i in pawnArr:
+                if(chessPiece[2]==i[0]):
+                    moves.append(i[1])
+        elif(chessPiece[0]==2):
+            for i in range(chessPiece[2]-8, -1, -8):
+                if (chessBoard[i][1]==1):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+8, 64, 8):
+                if (chessBoard[i][1]==1):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+1, chessPiece[2]+int(8)):
+                if (i>63 or chessBoard[i][1]==1):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-1, chessPiece[2]-int(8), -1):
+                if (i<0 or chessBoard[i][1]==1):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+        elif(chessPiece[0]==3):
+            for i in knightArr:
+                if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=1):
+                    moves.append(chessPiece[2]-i)
+                if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=1):
+                    moves.append(chessPiece[2]+i)
+        elif(chessPiece[0]==4):
+            for i in range(chessPiece[2]-7, -1, -7):
+                if(i<0 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-9, -1, -9):
+                if(i<0 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+7, 64, 7):
+                if(i>63 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+9, 64, 9):
+                if(i>63 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+        elif(chessPiece[0]==5):
+            for i in range(chessPiece[2]-8, -1, -8):
+                if (chessBoard[i][1]==1):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+8, 64, 8):
+                if (chessBoard[i][1]==1):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+1, chessPiece[2]+int(8)):
+                if (i>63 or chessBoard[i][1]==1):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-1, chessPiece[2]-int(8), -1):
+                if (i<0 or chessBoard[i][1]==1):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-7, -1, -7):
+                if(i<0 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-9, -1, -9):
+                if(i<0 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+7, 64, 7):
+                if(i>63 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+9, 64, 9):
+                if(i>63 or chessBoard[i][1]==1):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+        elif(chessPiece[0]==6):
+            for i in kingArr:
+                if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=1):
+                    moves.append(chessPiece[2]-i)
+                if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=1):
+                    moves.append(chessPiece[2]+i)
+    elif (chessPiece[1]==2):
+        if(chessPiece[0]==1):
+            if(chessBoard[chessPiece[2]+8]==[0, 0]):
+                moves.append(chessPiece[2]+8)
+            if(chessBoard[chessPiece[2]+7][1]==1):
+                moves.append(chessPiece[2]+7)
+            if(chessBoard[chessPiece[2]+9][1]==1):
+                moves.append(chessPiece[2]+9)
+            for i in pawnArr:
+                if(chessPiece[2]==i[0]):
+                    moves.append(i[1])
+        elif(chessPiece[0]==2):
+            for i in range(chessPiece[2]-8, -1, -8):
+                if (chessBoard[i][1]==2):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+8, 64, 8):
+                if (chessBoard[i][1]==2):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+1, chessPiece[2]+int(8)):
+                if (i>63 or chessBoard[i][1]==2):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-1, chessPiece[2]-int(8), -1):
+                if (i<0 or chessBoard[i][1]==2):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+        elif(chessPiece[0]==3):
+            for i in knightArr:
+                if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=2):
+                    moves.append(chessPiece[2]-i)
+                if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=2):
+                    moves.append(chessPiece[2]+i)
+        elif(chessPiece[0]==4):
+            for i in range(chessPiece[2]-7, -1, -7):
+                if(i<0 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-9, -1, -9):
+                if(i<0 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+7, 64, 7):
+                if(i>63 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+9, 64, 9):
+                if(i>63 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+        elif(chessPiece[0]==5):
+            for i in range(chessPiece[2]-8, -1, -8):
+                if (chessBoard[i][1]==2):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+8, 64, 8):
+                if (chessBoard[i][1]==2):
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+1, chessPiece[2]+int(8)):
+                if (i>63 or chessBoard[i][1]==2):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-1, chessPiece[2]-int(8), -1):
+                if (i<0 or chessBoard[i][1]==2):
+                    break
+                elif (i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-7, -1, -7):
+                if(i<0 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]-9, -1, -9):
+                if(i<0 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+7, 64, 7):
+                if(i>63 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+            for i in range(chessPiece[2]+9, 64, 9):
+                if(i>63 or chessBoard[i][1]==2):
+                    break
+                elif(i in walls):
+                    moves.append(i)
+                    break
+                else:
+                    moves.append(i)
+        elif(chessPiece[0]==6):
+            for i in kingArr:
+                if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=2):
+                    moves.append(chessPiece[2]-i)
+                if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=2):
+                    moves.append(chessPiece[2]+i)
+    return moves
 
 def drawUI(stdscr, turn, piece):
     if(turn==0):
@@ -240,7 +483,7 @@ def screenTooSmall(stdscr):
     maxyx = stdscr.getmaxyx()
     stdscr.erase()
     line0 = "Your terminal window isn't big enough"
-    stdscr.addstr(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-(len(line0)/2)))
+    stdscr.addstr(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-(len(line0)/2)), line0)
     stdscr.refresh()
     while(stdscr.getch()==curses.ERR):
         time.sleep(0.016)
