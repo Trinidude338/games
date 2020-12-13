@@ -459,15 +459,25 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn):
             ["   /.    ","   \\/    ","   /\\    ","   OO    ","  OOOO   "],
             ["  ____   ","  ||||   ","   OO    ","   OO    ","  OOOO   "],
             ["   ||    ","  =OO=   ","   ||    ","   OO    ","  OOOO   "]]
-    line0 = "+---------+---------+---------+---------+---------+---------+---------+---------+"
-    line1 = "|         |         |         |         |         |         |         |         |"
+    #line0 = "+---------+---------+---------+---------+---------+---------+---------+---------+"
+    line0 = [curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_PLUS]
+    #line1 = "|         |         |         |         |         |         |         |         |"
+    line1 = [curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE]
     for x in range(8):
-        stdscr.addstr(curs[0], curs[1], line0)
+        for i in line0:
+            stdscr.addch(curs[0], curs[1], i)
+            curs[1] += 1
         curs[0] += 1
+        curs[1] = topLeftCorner[1]
         for y in range(5):
-            stdscr.addstr(curs[0], curs[1], line1)
+            for j in line1:
+                stdscr.addch(curs[0], curs[1], j)
+                curs[1] += 1
             curs[0] += 1
-    stdscr.addstr(curs[0], curs[1], line0)
+            curs[1] = topLeftCorner[1]
+    for i in line0:
+        stdscr.addch(curs[0], curs[1], i)
+        curs[1] += 1
     curs = [topLeftCorner[0], topLeftCorner[1]]
     for num, i in enumerate(chessBoard):
         curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
