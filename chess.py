@@ -5,6 +5,8 @@ import random
 
 
 def main():
+    autoQueen0 = [0, 1, 2, 3, 4, 5, 6, 7]
+    autoQueen1 = [56, 57, 58, 59, 60, 61, 62, 63]
     stdscr = curses.initscr()
     curses.start_color()
     curses.raw()
@@ -79,6 +81,11 @@ def main():
         else:
             blink = 0
         moves = genMoves(chessBoard, chessPiece)
+        for num, i in enumerate(chessBoard):
+            if (i[0]==1 and i[1]==1 and num in autoQueen0):
+                i[0] = 5
+            elif(i[0]==1 and i[1]==2 and num in autoQueen1):
+                i[0] = 5
         if([6, 1] not in chessBoard):
             checkmate(stdscr, 1)
             break
@@ -121,7 +128,7 @@ def genMoves(chessBoard, chessPiece):
             if(chessBoard[chessPiece[2]-9][1]==2):
                 moves.append(chessPiece[2]-9)
             for i in pawnArr:
-                if(chessPiece[2]==i[0]):
+                if(chessPiece[2]==i[0] and chessBoard[i[1]][1]!=1):
                     moves.append(i[1])
         elif(chessPiece[0]==2):
             for i in range(chessPiece[2]-8, -1, -8):
@@ -275,7 +282,7 @@ def genMoves(chessBoard, chessPiece):
             if(chessBoard[chessPiece[2]+9][1]==1):
                 moves.append(chessPiece[2]+9)
             for i in pawnArr:
-                if(chessPiece[2]==i[0]):
+                if(chessPiece[2]==i[0] and chessBoard[i[1]][1]!=2):
                     moves.append(i[1])
         elif(chessPiece[0]==2):
             for i in range(chessPiece[2]-8, -1, -8):
