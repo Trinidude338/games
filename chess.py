@@ -105,6 +105,11 @@ def main():
         else:
             blink = 0
         moves = genMoves(chessBoard, chessPiece)
+        for i in moves:
+            if(i==chessBoard.index([6, 1])):
+                moves.pop(moves.index(i))
+            elif(i==chessBoard.index([6, 2])):
+                moves.pop(moves.index(i))
         checkX = 0
         checkO = 0
         for num, i in enumerate(chessBoard):
