@@ -62,14 +62,6 @@ def main():
         elif(c==' ' and chessBoard[chessCurs][1]==whosTurnIsIt+1):
             chessPiece = [chessBoard[chessCurs][0], chessBoard[chessCurs][1], chessCurs]
         elif(not chessPiece==[0, 0, 0] and (c==chr(10) or c==chr(13)) and chessCurs in moves):
-            if(checkX==1):
-                checkX2 = 1
-            else:
-                checkX2 = 0
-            if(checkO==1):
-                checkO2 = 1
-            else:
-                checkO2 = 0
             if(whosTurnIsIt==0):
                 whosTurnIsIt = 1
             else:
@@ -77,10 +69,21 @@ def main():
             chessBoard[chessPiece[2]] = [0, 0]
             chessBoard[chessCurs] = [chessPiece[0], chessPiece[1]]
             chessPiece = [0, 0, 0]
-            if (checkX==1 and checkX2==1 and whosTurnIsIt==1):
+            checkX2 = 0
+            checkO2 = 0
+            for num, i in enumerate(chessBoard):
+                if(i[1]==1):
+                    tmpMov = genMoves(chessBoard, [i[0], i[1], num])
+                    if(chessBoard.index([6, 2]) in tmpMov):
+                        checkO2 = 1
+                elif(i[1]==2):
+                    tmpMov = genMoves(chessBoard, [i[0], i[1], num])
+                    if(chessBoard.index([6, 1]) in tmpMov):
+                        checkX2 = 1
+            if (checkX==1 and checkX2==1 and whosTurnIsIt==0):
                 checkmate(stdscr, 1)
                 break
-            if (checkO==1 and checkO2==1 and whosTurnIsIt==0):
+            if (checkO==1 and checkO2==1 and whosTurnIsIt==1):
                 checkmate(stdscr, 0)
                 break
         elif(c==curses.KEY_UP):
@@ -579,21 +582,21 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
             curs[1] = topLeftCorner[1]
     for num, i in enumerate(line0):
         if (num==0):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'a')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'a')
         if (num==10):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'b')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'b')
         if (num==20):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'c')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'c')
         if (num==30):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'd')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'd')
         if (num==40):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'e')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'e')
         if (num==50):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'f')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'f')
         if (num==60):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'g')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'g')
         if (num==70):
-            stdscr.addch(curs[0]+1, curs[1]+4, 'h')
+            stdscr.addch(curs[0]+1, curs[1]+5, 'h')
         stdscr.addch(curs[0], curs[1], i)
         curs[1] += 1
     curs = [topLeftCorner[0], topLeftCorner[1]]
@@ -607,7 +610,7 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
         if (num in moves and ifMoves==1):
             for j in range(5):
                 for x in range(9):
-                    stdscr.addch(curs[0], curs[1]+x, '+')
+                    stdscr.addch(curs[0], curs[1]+x, '@')
                 curs[0] += 1
         curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
         if (num==chessCurs and ifBlinkOn!=1):
