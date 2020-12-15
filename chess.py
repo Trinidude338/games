@@ -24,6 +24,10 @@ def main():
     chessBoard = genChessBoard()
     moves = genMoves(chessBoard, chessPiece)
     frame = 0
+    checkX = 0
+    checkX2 = 0
+    checkO = 0
+    checkO2 = 0
     ifMoves = 0
     seconds = 0
     blink = 0
@@ -40,7 +44,7 @@ def main():
             frame += 1
         #draw frame
         drawBoard(stdscr, chessBoard, chessCurs, blink, ifMoves, moves)
-        drawUI(stdscr, whosTurnIsIt, chessPiece)
+        drawUI(stdscr, whosTurnIsIt, chessPiece, checkX, checkO)
         #keyboard input
         try:
             c = stdscr.get_wch()
@@ -58,6 +62,14 @@ def main():
         elif(c==' ' and chessBoard[chessCurs][1]==whosTurnIsIt+1):
             chessPiece = [chessBoard[chessCurs][0], chessBoard[chessCurs][1], chessCurs]
         elif(not chessPiece==[0, 0, 0] and (c==chr(10) or c==chr(13)) and chessCurs in moves):
+            if(checkX==1):
+                checkX2 = 1
+            else:
+                checkX2 = 0
+            if(checkO==1):
+                checkO2 = 1
+            else:
+                checkO2 = 0
             if(whosTurnIsIt==0):
                 whosTurnIsIt = 1
             else:
@@ -65,6 +77,12 @@ def main():
             chessBoard[chessPiece[2]] = [0, 0]
             chessBoard[chessCurs] = [chessPiece[0], chessPiece[1]]
             chessPiece = [0, 0, 0]
+            if (checkX==1 and checkX2==1 and whosTurnIsIt==0):
+                checkmate(stdscr, 1)
+                break
+            if (checkO==1 and checkO2==1 and whosTurnIsIt==1):
+                checkmate(stdscr, 0)
+                break
         elif(c==curses.KEY_UP):
             frame = 50
             if(chessCurs>7):
@@ -87,17 +105,22 @@ def main():
         else:
             blink = 0
         moves = genMoves(chessBoard, chessPiece)
+        checkX = 0
+        checkO = 0
+        for num, i in enumerate(chessBoard):
+            if(i[1]==1):
+                tmpMov = genMoves(chessBoard, [i[0], i[1], num])
+                if(chessBoard.index([6, 2]) in tmpMov):
+                    checkO = 1
+            elif(i[1]==2):
+                tmpMov = genMoves(chessBoard, [i[0], i[1], num])
+                if(chessBoard.index([6, 1]) in tmpMov):
+                    checkX = 1
         for num, i in enumerate(chessBoard):
             if (i[0]==1 and i[1]==1 and num in autoQueen0):
                 i[0] = 5
             elif(i[0]==1 and i[1]==2 and num in autoQueen1):
                 i[0] = 5
-        if([6, 1] not in chessBoard):
-            checkmate(stdscr, 1)
-            break
-        if([6, 2] not in chessBoard):
-            checkmate(stdscr, 0)
-            break
         #
         stdscr.refresh()
         time.sleep(0.016)
@@ -108,9 +131,9 @@ def checkmate(stdscr, winner):
     maxyx = stdscr.getmaxyx()
     stdscr.erase()
     if (winner==0):
-        line0 = "X won by Checkmate!(kinda)"
+        line0 = "X won by Checkmate!"
     else:
-        line0 = "O won by Checkmate!(kinda)"
+        line0 = "O won by Checkmate!"
     stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2-len(line0)/2), line0)
     stdscr.refresh()
     time.sleep(4)
@@ -435,7 +458,7 @@ def genMoves(chessBoard, chessPiece):
                     moves.append(chessPiece[2]+i)
     return moves
 
-def drawUI(stdscr, turn, piece):
+def drawUI(stdscr, turn, piece, x, o):
     if(turn==0):
         stdscr.addstr(1, 1, "X's turn to play")
     else:
@@ -455,6 +478,15 @@ def drawUI(stdscr, turn, piece):
     else:
         line0 = "None"
     stdscr.addstr(3, 1, str("Selected Piece: "+line0))
+    if(x==1 and o==1):
+        line1 = "X and O are in Check!!"
+    elif(x==1 and o==0):
+        line1 = "X is in Check!!"
+    elif(x==0 and o==1):
+        line1 = "O is in Check!!"
+    else:
+        line1 = ''
+    stdscr.addstr(5, 1, line1)
 
 def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
     maxyx = stdscr.getmaxyx()
