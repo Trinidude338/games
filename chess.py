@@ -24,6 +24,7 @@ def main():
     chessBoard = genChessBoard()
     moves = genMoves(chessBoard, chessPiece)
     frame = 0
+    ifMoves = 0
     seconds = 0
     blink = 0
     offset = 30
@@ -38,7 +39,7 @@ def main():
         else:
             frame += 1
         #draw frame
-        drawBoard(stdscr, chessBoard, chessCurs, blink)
+        drawBoard(stdscr, chessBoard, chessCurs, blink, ifMoves, moves)
         drawUI(stdscr, whosTurnIsIt, chessPiece)
         #keyboard input
         try:
@@ -49,6 +50,11 @@ def main():
         if (c=='q'):
             gameover(stdscr, whosTurnIsIt)
             break
+        elif(c=='m'):
+            if(ifMoves==0):
+                ifMoves = 1
+            else:
+                ifMoves = 0
         elif(c==' ' and chessBoard[chessCurs][1]==whosTurnIsIt+1):
             chessPiece = [chessBoard[chessCurs][0], chessBoard[chessCurs][1], chessCurs]
         elif(not chessPiece==[0, 0, 0] and (c==chr(10) or c==chr(13)) and chessCurs in moves):
@@ -450,10 +456,18 @@ def drawUI(stdscr, turn, piece):
         line0 = "None"
     stdscr.addstr(3, 1, str("Selected Piece: "+line0))
 
-def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn):
+def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
     maxyx = stdscr.getmaxyx()
     topLeftCorner = [math.trunc(maxyx[0]/2-25), math.trunc(maxyx[1]/2-40)]
     curs = [topLeftCorner[0], topLeftCorner[1]]
+    checkerboard = ('.', ';', '.', ';', '.', ';', '.', ';', 
+            ';', '.', ';', '.', ';', '.', ';', '.', 
+            '.', ';', '.', ';', '.', ';', '.', ';', 
+            ';', '.', ';', '.', ';', '.', ';', '.', 
+            '.', ';', '.', ';', '.', ';', '.', ';', 
+            ';', '.', ';', '.', ';', '.', ';', '.', 
+            '.', ';', '.', ';', '.', ';', '.', ';', 
+            ';', '.', ';', '.', ';', '.', ';', '.', )
     pieces0 = [["   /\\    ","   \\/    ","   XX    ","   XX    ","  XXXX   "],
             ["  X  X   ","  XXXX   ","   XX    ","   XX    ","  XXXX   "],
             ["   XX    ","  XXXX   ","  XX     ","   XX    ","  XXXX   "],
@@ -471,6 +485,22 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn):
     #line1 = "|         |         |         |         |         |         |         |         |"
     line1 = [curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', curses.ACS_VLINE]
     for x in range(8):
+        if(x==0):
+            stdscr.addch(curs[0]+3, curs[1]-2, '8')
+        if(x==1):
+            stdscr.addch(curs[0]+3, curs[1]-2, '7')
+        if(x==2):
+            stdscr.addch(curs[0]+3, curs[1]-2, '6')
+        if(x==3):
+            stdscr.addch(curs[0]+3, curs[1]-2, '5')
+        if(x==4):
+            stdscr.addch(curs[0]+3, curs[1]-2, '4')
+        if(x==5):
+            stdscr.addch(curs[0]+3, curs[1]-2, '3')
+        if(x==6):
+            stdscr.addch(curs[0]+3, curs[1]-2, '2')
+        if(x==7):
+            stdscr.addch(curs[0]+3, curs[1]-2, '1')
         for i in line0:
             stdscr.addch(curs[0], curs[1], i)
             curs[1] += 1
@@ -482,11 +512,38 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn):
                 curs[1] += 1
             curs[0] += 1
             curs[1] = topLeftCorner[1]
-    for i in line0:
+    for num, i in enumerate(line0):
+        if (num==0):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'a')
+        if (num==10):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'b')
+        if (num==20):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'c')
+        if (num==30):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'd')
+        if (num==40):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'e')
+        if (num==50):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'f')
+        if (num==60):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'g')
+        if (num==70):
+            stdscr.addch(curs[0]+1, curs[1]+4, 'h')
         stdscr.addch(curs[0], curs[1], i)
         curs[1] += 1
     curs = [topLeftCorner[0], topLeftCorner[1]]
     for num, i in enumerate(chessBoard):
+        curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
+        for j in range(5):
+            for x in range(9):
+                stdscr.addch(curs[0], curs[1]+x, checkerboard[num])
+            curs[0] += 1
+        curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
+        if (num in moves and ifMoves==1):
+            for j in range(5):
+                for x in range(9):
+                    stdscr.addch(curs[0], curs[1]+x, '+')
+                curs[0] += 1
         curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
         if (num==chessCurs and ifBlinkOn!=1):
             for j in range(5):
@@ -570,8 +627,9 @@ def drawControls(stdscr):
     line0 = "Controls:"
     line1 = "q - Quit"
     line2 = "Arrow Keys - Move Cursor"
-    line3 = "Space - Select Piece"
-    line4 = "Enter - Move Piece"
+    line3 = "m - Show Moves"
+    line4 = "Space - Select Piece"
+    line5 = "Enter - Move Piece"
     controlsbox.move(math.trunc(maxyx1[0]/2)-5, math.trunc(maxyx1[1]/2-len(line0)/2))
     controlsbox.addstr(line0)
     controlsbox.move(math.trunc(maxyx1[0]/2)-1, math.trunc(maxyx1[1]/2-len(line1)/2))
@@ -582,6 +640,8 @@ def drawControls(stdscr):
     controlsbox.addstr(line3)
     controlsbox.move(math.trunc(maxyx1[0]/2)+5, math.trunc(maxyx1[1]/2-len(line4)/2))
     controlsbox.addstr(line4)
+    controlsbox.move(math.trunc(maxyx1[0]/2)+7, math.trunc(maxyx1[1]/2-len(line5)/2))
+    controlsbox.addstr(line5)
     stdscr.refresh()
     controlsbox.refresh()
     time.sleep(1)
