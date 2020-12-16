@@ -173,7 +173,7 @@ def genMoves(chessBoard, chessPiece):
             if(chessBoard[chessPiece[2]-9][1]==2 and chessPiece[2] not in walls0):
                 moves.append(chessPiece[2]-9)
             for i in pawnArr:
-                if(chessPiece[2]==i[0] and chessBoard[i[1]][1]!=1):
+                if(chessPiece[2]==i[0] and chessBoard[i[1]]==[0, 0]):
                     moves.append(i[1])
         elif(chessPiece[0]==2):
             for i in range(chessPiece[2]-8, -1, -8):
@@ -337,7 +337,7 @@ def genMoves(chessBoard, chessPiece):
             if(chessBoard[chessPiece[2]+9][1]==1 and chessPiece[2] not in walls1):
                 moves.append(chessPiece[2]+9)
             for i in pawnArr:
-                if(chessPiece[2]==i[0] and chessBoard[i[1]][1]!=2):
+                if(chessPiece[2]==i[0] and chessBoard[i[1]]==[0, 0]):
                     moves.append(i[1])
         elif(chessPiece[0]==2):
             for i in range(chessPiece[2]-8, -1, -8):
