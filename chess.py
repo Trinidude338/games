@@ -726,9 +726,13 @@ def drawControls(stdscr):
 
 def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
-    title = "Chess"
-    stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
-    stdscr.addstr(title)
+    title = ["        CCCCCCCCCCCCChhhhhhh                                                                         ", "        CCC::::::::::::Ch:::::h                                                                            ", "   CC:::::::::::::::Ch:::::h                                                                        ", "   C:::::CCCCCCCC::::Ch:::::h                                                                          ", "                           C:::::C       CCCCCC h::::h hhhhh           eeeeeeeeeeee        ssssssssss       ssssssssss                                     ", "  C:::::C               h::::hh:::::hhh      ee::::::::::::ee    ss::::::::::s    ss::::::::::s            ", "   C:::::C               h::::::::::::::hh   e::::::eeeee:::::eess:::::::::::::s ss:::::::::::::s            ", " C:::::C               h:::::::hhh::::::h e::::::e     e:::::es::::::ssss:::::ss::::::ssss:::::s        ", "C:::::C               h::::::h   h::::::he:::::::eeeee::::::e s:::::s  ssssss  s:::::s  ssssss        ", "C:::::C               h:::::h     h:::::he:::::::::::::::::e    s::::::s         s::::::s             ", "C:::::C               h:::::h     h:::::he::::::eeeeeeeeeee        s::::::s         s::::::s          ", "   C:::::C       CCCCCC h:::::h     h:::::he:::::::e           ssssss   s:::::s ssssss   s:::::s          ", "C:::::CCCCCCCC::::C h:::::h     h:::::he::::::::e          s:::::ssss::::::ss:::::ssss::::::s     ", "    CC:::::::::::::::C h:::::h     h:::::h e::::::::eeeeeeee  s::::::::::::::s s::::::::::::::s         ", "CCC::::::::::::C h:::::h     h:::::h  ee:::::::::::::e   s:::::::::::ss   s:::::::::::ss    ", "            CCCCCCCCCCCCC hhhhhhh     hhhhhhh    eeeeeeeeeeeeee    sssssssssss      sssssssssss               "]
+    for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
+        try:
+            stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
+            stdscr.addstr(title[num])
+        except:
+            pass
     stdscr.refresh()
     time.sleep(1)
     curses.flushinp()

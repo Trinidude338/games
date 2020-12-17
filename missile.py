@@ -417,9 +417,13 @@ def drawControls(stdscr):
 
 def drawTitle(stdscr, prevscore):
     maxyx = stdscr.getmaxyx()
-    title = "Missile"
-    stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
-    stdscr.addstr(title)
+    title = ["    ___                       ___           ___                                     ___ ", "    /__/\        ___          /  /\         /  /\        ___                        /  /\ ", "    |  |::\      /  /\        /  /:/_       /  /:/_      /  /\                      /  /:/_ ", "     |  |:|:\    /  /:/       /  /:/ /\     /  /:/ /\    /  /:/      ___     ___    /  /:/ /\ ", "   __|__|:|\:\  /__/::\      /  /:/ /::\   /  /:/ /::\  /__/::\     /__/\   /  /\  /  /:/ /:/_ ", "  /__/::::| \:\ \__\/\:\__  /__/:/ /:/\:\ /__/:/ /:/\:\ \__\/\:\__  \  \:\ /  /:/ /__/:/ /:/ /\\", "   \  \:\~~\__\/    \  \:\/\ \  \:\/:/~/:/ \  \:\/:/~/:/    \  \:\/\  \  \:\  /:/  \  \:\/:/ /:/ ", "   \  \:\           \__\::/  \  \::/ /:/   \  \::/ /:/      \__\::/   \  \:\/:/    \  \::/ /:/ ", "   \  \:\          /__/:/    \__\/ /:/     \__\/ /:/       /__/:/     \  \::/      \  \:\/:/ ", "    \  \:\         \__\/       /__/:/        /__/:/        \__\/       \__\/        \  \::/ ", "     \__\/                     \__\/         \__\/                                   \__\/ "]
+    for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
+        try:
+            stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
+            stdscr.addstr(title[num])
+        except:
+            pass
     stdscr.refresh()
     time.sleep(1)
     curses.flushinp()

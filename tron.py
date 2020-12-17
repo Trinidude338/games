@@ -130,8 +130,12 @@ def drawPlayerTrail(stdscr, trail, player):
 
 def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
-    title = "Tron"
-    stdscr.addstr(math.trunc(maxyx[0]/2),math.trunc(maxyx[1]/2-len(title)/2), title)
+    title = [" ____ ____ ____ ____ ", "||T |||r |||o |||n ||", "||__|||__|||__|||__||", "|/__\|/__\|/__\|/__\|"]
+    for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
+        try:
+            stdscr.addstr(math.trunc(maxyx[0]/2+i),math.trunc(maxyx[1]/2-len(title[num])/2), title[num])
+        except:
+            pass
     stdscr.refresh()
     time.sleep(1)
     curses.flushinp()

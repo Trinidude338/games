@@ -218,9 +218,13 @@ def drawControls(stdscr):
 
 def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
-    title = "Doom"
-    stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
-    stdscr.addstr(title)
+    title = [":::::::-.      ...         ...     .        :       .,-:::::   :::         ...   :::.    :::..,::::::", " ;;,   `';, .;;;;;;;.   .;;;;;;;.  ;;,.    ;;;    ,;;;'````'   ;;;      .;;;;;;;.`;;;;,  `;;;;;;;''''", " `[[     [[,[[     \[[,,[[     \[[,[[[[, ,[[[[,   [[[          [[[     ,[[     \[[,[[[[[. '[[ [[cccc", "  $$,    $$$$$,     $$$$$$,     $$$$$$$$$$$\"$$$   $$$          $$'     $$$,     $$$$$$ \"Y$c$$ $$\"\"\"\"", "    888_,o8P'\"888,_ _,88P\"888,_ _,88P888 Y88\" 888o  `88bo,__,o, o88oo,.__\"888,_ _,88P888    Y88 888oo,__", "    MMMMP\"`    \"YMMMMMP\"   \"YMMMMMP\" MMM  M'  \"MMM    \"YUMMMMMP\"\"\"\"\"YUMMM  \"YMMMMMP\" MMM     YM \"\"\"\"YUMMM"]
+    for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
+        try:
+            stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
+            stdscr.addstr(title[num])
+        except:
+            pass
     stdscr.refresh()
     time.sleep(1)
     curses.flushinp()
@@ -231,7 +235,7 @@ def drawTitle(stdscr):
 
 def gameover(stdscr):
     maxyx = stdscr.getmaxyx()
-    line0 = "You died."
+    line0 = "You quit."
     stdscr.clear()
     stdscr.move(math.trunc(maxyx[0]/2-1), math.trunc(maxyx[1]/2-math.trunc(len(line0)/2)))
     stdscr.addstr(line0)
