@@ -5,34 +5,34 @@ import math
 
 
 def main():
-    Tets = ["XXXX",
-            "X0X0X0X", 
-            "XXXX", 
-            "X0X0X0X", 
-            "X0XXX", 
-            "XX0X0X", 
-            "XXX0  X", 
-            " X0 X0XX", 
-            "  X0XXX", 
-            "X0X0XX", 
-            "XXX0X", 
-            "XX0 X0 X", 
-            "XX0XX", 
-            "XX0XX", 
-            "XX0XX", 
-            "XX0XX", 
-            " XX0XX", 
-            "X0XX0 X", 
-            " XX0XX", 
-            "X0XX0 X", 
-            " X0XXX", 
-            "X0XX0X", 
-            "XXX0 X", 
-            " X0XX0 X", 
-            "XX0 XX", 
-            " X0XX0X", 
-            "XX0 XX", 
-            " X0XX0X"]
+    Tets = ["AAAA",
+            "A0A0A0A", 
+            "AAAA", 
+            "A0A0A0A", 
+            "B0BBB", 
+            "BB0B0B", 
+            "BBB0  B", 
+            " B0 B0BB", 
+            "  C0CCC", 
+            "C0C0CC", 
+            "CCC0C", 
+            "CC0 C0 C", 
+            "DD0DD", 
+            "DD0DD", 
+            "DD0DD", 
+            "DD0DD", 
+            " EE0EE", 
+            "E0EE0 E", 
+            " EE0EE", 
+            "E0EE0 E", 
+            " F0FFF", 
+            "F0FF0F", 
+            "FFF0 F", 
+            " F0FF0 F", 
+            "GG0 GG", 
+            " G0GG0G", 
+            "GG0 GG", 
+            " G0GG0G"]
     frame = 0
     deadTets = []
     cols = []
@@ -48,7 +48,9 @@ def main():
     initTet = [5, math.trunc(maxyx[1]/2)]
     Tet = [initTet[0], initTet[1]]
     curtet = random.choice(range(0, len(Tets), 4))
+    nextet = random.choice(range(0, len(Tets), 4))
     drawTitle(stdscr)
+    drawControls(stdscr)
     curses.flushinp()
     while(not dead):
         if (frame>60):
@@ -57,11 +59,12 @@ def main():
         drawBin(stdscr)
         drawTetrominos(stdscr, deadTets)
         drawFallingTet(stdscr, frame, Tet, curtet, Tets)
+        drawUI(stdscr, Tets, nextet, score)
         checkBounds(stdscr, cols, Tet)
-        if (hasToSet(stdscr, Tet, deadTets, curtet, Tets)):
-            Tet[0] -= 1
+        if (hasToSet(stdscr, Tet, deadTets, curtet, Tets, cols)):
             Set(Tet, curtet, deadTets, initTet, Tets)
-            curtet = random.choice(range(0, len(Tets), 4))
+            curtet = nextet
+            nextet = random.choice(range(0, len(Tets), 4))
             Tet = [initTet[0], initTet[1]]
         try:
             c = stdscr.get_wch()
@@ -101,15 +104,22 @@ def main():
         for y in range(0, int(maxyx[0])):
             shiftnum = 0
             for x in range(int(maxyx[1]/2-12), int(maxyx[1]/2+12)):
-                if([y, x, 'X'] in deadTets):
-                    shiftnum += 1
+                for c in range(65, 72):
+                    if([y, x, chr(c)] in deadTets):
+                        shiftnum += 1
             if(shiftnum>=19):
-                for num, i in enumerate(deadTets):
-                    if(i[0]==y):
-                        deadTets.pop(num)
+                toPop = []
+                for i in deadTets:
+                    if(i[0]==y or i[0]==int(maxyx[0]*2/3+1)):
+                        toPop.append(i)
+                for i in toPop:
+                    deadTets.remove(i)
+                for i in deadTets:
                     if(i[0]<y):
                         i[0] += 1
                 score += 1
+                shiftnum = 0
+                curses.flash()
         #
         stdscr.refresh()
         stdscr.erase()
@@ -122,6 +132,30 @@ def main():
         time.sleep(0.016)
         frame += 1
     curses.endwin()
+
+def drawUI(stdscr, Tets, nextet, score):
+    maxyx = stdscr.getmaxyx()
+    line0 = "Next Piece: "
+    line1 = "Score: "
+    stdscr.addstr(5, int(maxyx[1]/2-30), line0)
+    stdscr.addstr(5, int(maxyx[1]/2+15), line1)
+    count = 0
+    curs = [5, int(maxyx[1]/2-30+len(line0))]
+    for i in Tets[nextet]:
+        if(i=='0'):
+            curs[1] -= count
+            count = 0
+            curs[0] += 1
+        elif(i==' '):
+            count += 1
+            curs[1] += 1
+        else:
+            count += 1
+            curs[1] += 1
+            stdscr.addch(curs[0], curs[1], i)
+    curs = [5, int(maxyx[1]/2+15+len(line1))]
+    stdscr.addstr(curs[0], curs[1], str(score))
+
 
 def drawControls(stdscr):
     maxyx = stdscr.getmaxyx()
@@ -151,7 +185,11 @@ def drawControls(stdscr):
     controlsbox.addstr(line4)
     stdscr.refresh()
     controlsbox.refresh()
-    time.sleep(4)
+    frame = 0
+    curses.flushinp()
+    while(stdscr.getch()==curses.ERR and frame < 300):
+        frame += 1
+        time.sleep(0.016)
     controlsbox.clear()
     stdscr.clear()
     controlsbox.refresh()
@@ -173,7 +211,7 @@ def checkBounds(stdscr, cols, Tet):
             Tet[1] += 1
             break
 
-def hasToSet(stdscr, Tet, deadTets, curtet, Tets):
+def hasToSet(stdscr, Tet, deadTets, curtet, Tets, cols):
     maxyx = stdscr.getmaxyx()
     curs = [Tet[0], Tet[1]]
     count = 0
@@ -190,14 +228,20 @@ def hasToSet(stdscr, Tet, deadTets, curtet, Tets):
             count += 1
             for j in deadTets:
                 if (j[0] == curs[0] and j[1] == curs[1]):
+                    Tet[0] -= 1
                     return True
             curs[1] += 1
     count = 0
     for i in Tets[curtet]:
         if (i == '0'):
             count += 1
-    if (Tet[0] > maxyx[0]-3-count):
-        return True
+    ground0 = []
+    for i in range(int(maxyx[1]/2-12), int(maxyx[1]/2+12)):
+        ground0.append([int(maxyx[0]*2/3)+1, i])
+    for i in cols:
+        if(i in ground0):
+            Tet[0] -= 1
+            return True
     return False
 
 def Set(Tet, curtet, deadTets, initTet, Tets):
@@ -211,7 +255,7 @@ def Set(Tet, curtet, deadTets, initTet, Tets):
             curs = [curs[0]+1, curs[1]-count]
             count = 0
         else:
-            deadTets.append([curs[0], curs[1], 'X'])
+            deadTets.append([curs[0], curs[1], Tets[curtet][-1]])
             count += 1
             curs[1] += 1
 
@@ -247,7 +291,7 @@ def drawBin(stdscr):
     maxyx = stdscr.getmaxyx()
     curs = [5, math.trunc(maxyx[1]/2-10)]
     stdscr.move(curs[0], curs[1])
-    while(curs[0]<maxyx[0]-2):
+    while(curs[0]<maxyx[0]*2/3):
         stdscr.addch("#")
         curs[0] += 1
         stdscr.move(curs[0], curs[1])
