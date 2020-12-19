@@ -38,6 +38,16 @@ def main():
     cols = []
     score = 0
     stdscr = curses.initscr()
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_CYAN)
+    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLUE)
+    curses.init_pair(3, curses.COLOR_MAGENTA, curses.COLOR_MAGENTA)
+    curses.init_pair(4, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
+    curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_GREEN)
+    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    curses.init_pair(7, curses.COLOR_RED, curses.COLOR_RED)
+    curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(9, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.raw()
     curses.noecho()
     curses.curs_set(0)
@@ -152,7 +162,7 @@ def drawUI(stdscr, Tets, nextet, score):
         else:
             count += 1
             curs[1] += 1
-            stdscr.addch(curs[0], curs[1], i)
+            stdscr.addch(curs[0], curs[1], i, curses.color_pair(int(nextet/4)+1))
     curs = [5, int(maxyx[1]/2+15+len(line1))]
     stdscr.addstr(curs[0], curs[1], str(score))
 
@@ -255,7 +265,7 @@ def Set(Tet, curtet, deadTets, initTet, Tets):
             curs = [curs[0]+1, curs[1]-count]
             count = 0
         else:
-            deadTets.append([curs[0], curs[1], Tets[curtet][-1]])
+            deadTets.append([curs[0], curs[1], Tets[curtet][-1], int(curtet/4)+1])
             count += 1
             curs[1] += 1
 
@@ -273,7 +283,7 @@ def drawTitle(stdscr):
     for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2+1))):
         try:
             stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-len(title[num])/2))
-            stdscr.addstr(title[num])
+            stdscr.addstr(title[num], curses.color_pair(9))
         except:
             pass
     stdscr.refresh()
@@ -292,22 +302,22 @@ def drawBin(stdscr):
     curs = [5, math.trunc(maxyx[1]/2-10)]
     stdscr.move(curs[0], curs[1])
     while(curs[0]<maxyx[0]*2/3):
-        stdscr.addch("#")
+        stdscr.addch("#", curses.color_pair(8))
         curs[0] += 1
         stdscr.move(curs[0], curs[1])
     while(curs[1]<math.trunc(maxyx[1]/2+10)):
-        stdscr.addch("#")
+        stdscr.addch("#", curses.color_pair(8))
         curs[1] += 1
     while(curs[0]>5):
-        stdscr.addstr("#")
+        stdscr.addstr("#", curses.color_pair(8))
         curs[0] -= 1
         stdscr.move(curs[0], curs[1])
-    stdscr.addch("#")
+    stdscr.addch("#", curses.color_pair(8))
 
 def drawTetrominos(stdscr, deadTets):
     for i in (deadTets):
         stdscr.move(i[0], i[1])
-        stdscr.addch(i[2])
+        stdscr.addch(i[2], curses.color_pair(i[3]))
 
 def drawFallingTet(stdscr, frame, Tet, curtet, Tets):
     curs = [Tet[0], Tet[1]]
@@ -320,7 +330,7 @@ def drawFallingTet(stdscr, frame, Tet, curtet, Tets):
             curs[1] += 1
             count += 1
         else:
-            stdscr.addch(curs[0], curs[1], i)
+            stdscr.addch(curs[0], curs[1], i, curses.color_pair(int(curtet/4)+1))
             curs[1] += 1
             count += 1
     if (frame%30==0):
