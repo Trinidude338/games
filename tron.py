@@ -5,6 +5,10 @@ import random
 
 def main():
     stdscr = curses.initscr()
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLUE)
+    curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
+    curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.noecho()
     stdscr.nodelay(True)
     curses.raw()            
@@ -101,9 +105,9 @@ def gameover(stdscr, winner):
     maxyx = stdscr.getmaxyx()
     time.sleep(2)
     if (winner == 0):
-        line = "X won"
+        line = "Blue won"
     else:
-        line = "O won"
+        line = "Yellow won"
     stdscr.addstr(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-len(line)/2), line)
     stdscr.refresh()
     time.sleep(2)
@@ -124,16 +128,16 @@ def drawPlayers(stdscr, yx1, yx2):
 def drawPlayerTrail(stdscr, trail, player):
     for i in trail:
         if (player == 0):
-            stdscr.addch(i[0], i[1], 'X')
+            stdscr.addch(i[0], i[1], 'X', curses.color_pair(1))
         else:
-            stdscr.addch(i[0], i[1], 'O')
+            stdscr.addch(i[0], i[1], 'O', curses.color_pair(2))
 
 def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
     title = [" ____ ____ ____ ____ ", "||T |||r |||o |||n ||", "||__|||__|||__|||__||", "|/__\|/__\|/__\|/__\|"]
     for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
         try:
-            stdscr.addstr(math.trunc(maxyx[0]/2+i),math.trunc(maxyx[1]/2-len(title[num])/2), title[num])
+            stdscr.addstr(math.trunc(maxyx[0]/2+i),math.trunc(maxyx[1]/2-len(title[num])/2), title[num], curses.color_pair(3))
         except:
             pass
     stdscr.refresh()
