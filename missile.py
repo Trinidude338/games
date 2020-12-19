@@ -12,6 +12,11 @@ def main():
     dead = False
     stdscr = curses.initscr()
     curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.raw()
     curses.noecho()
     curses.cbreak()
@@ -64,7 +69,7 @@ def main():
     drawTitle(stdscr, prevscore)
     drawControls(stdscr)
     for i in range(125):
-        stars.append([random.randrange(3), random.randrange(maxyx[0]-1), random.randrange(maxyx[1]-1)])
+        stars.append([random.randrange(3), random.randrange(maxyx[0]-1), random.randrange(maxyx[1]-1), random.randrange(2, 4)])
     nonplayable = True
     while(nonplayable):
         drawBG(stdscr, stars)
@@ -88,7 +93,7 @@ def main():
         drawClouds(stdscr, clouds)
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
-            drawEnemy(stdscr, enemysSpriteList, i[0], i[1], i[2], half)
+            drawEnemy(stdscr, enemysSpriteList, i[0], i[1], i[2], i[3], half)
         drawUfos(stdscr, ufos, frame)
         drawRocket(stdscr, rocketxy)
         drawUI(stdscr, health, ammo)
@@ -170,9 +175,9 @@ def main():
                 clouds.pop(clouds.index(i))
         #add new enemies
         if (seconds%random.randrange(1, 5)==0 and frame==0):
-            enemys.append([random.randrange(spriteNum), random.randrange(maxyx[0]), maxyx[1]-10])
+            enemys.append([random.randrange(spriteNum), random.randrange(maxyx[0]), maxyx[1]-10, random.randrange(2, 6)])
         if (seconds%15==0 and frame==0):
-            ufos.append([random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), 1])
+            ufos.append([random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), 1, random.randrange(2, 6)])
         #move enemies
         if(frame%3==0):
             for i in enemys:
@@ -192,7 +197,7 @@ def main():
         if(frame%18==0):
             ufocount = len(ufos)
             for i in range(ufocount):
-                 ufos[i] = [random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), ufos[i][2]]
+                 ufos[i] = [random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]-10), ufos[i][2], ufos[i][3]]
 
         #detect bullet collisions
         for i in bullets1:
@@ -261,7 +266,7 @@ def main():
                             ammo = 20
         #add stars
         if (frame%random.randrange(20, 40)==0):
-            stars.append([random.randrange(3), random.randrange(maxyx[0]-1), maxyx[1]-1])
+            stars.append([random.randrange(3), random.randrange(maxyx[0]-1), maxyx[1]-1, random.randrange(2, 4)])
         #move stars
         if (frame%10==0):
             for i in stars:
@@ -310,7 +315,7 @@ def drawUfos(stdscr, ufos, frame):
                     count = 0
                 else:
                     if (curs[0]>0 and curs[0]<maxyx[0] and curs[1]>0 and curs[1]<maxyx[1]):
-                        stdscr.addch(curs[0], curs[1], i)
+                        stdscr.addch(curs[0], curs[1], i, curses.color_pair(ufo[3]))
                     curs[1] += 1
                     count += 1
         elif (spritenum >= 4 and spritenum <= 6):
@@ -324,7 +329,7 @@ def drawUfos(stdscr, ufos, frame):
                     count = 0
                  else:
                     if (curs[0]>0 and curs[0]<maxyx[0] and curs[1]>0 and curs[1]<maxyx[1]):
-                        stdscr.addch(curs[0], curs[1], i)
+                        stdscr.addch(curs[0], curs[1], i, curses.color_pair(ufo[3]))
                     curs[1] += 1
                     count += 1
         elif (spritenum >= 7):
@@ -338,7 +343,7 @@ def drawUfos(stdscr, ufos, frame):
                     count = 0
                 else:
                     if (curs[0]>0 and curs[0]<maxyx[0] and curs[1]>0 and curs[1]<maxyx[1]):
-                        stdscr.addch(curs[0], curs[1], i)
+                        stdscr.addch(curs[0], curs[1], i, curses.color_pair(ufo[3]))
                     curs[1] += 1
                     count += 1
 
@@ -355,7 +360,7 @@ def drawBG(stdscr, stars):
         elif (i[0]==2):
             star = "."
         stdscr.move(i[1], i[2])
-        stdscr.addch(star)
+        stdscr.addch(star, curses.color_pair(i[3]))
     #moon
     moon = ".-.,=\"''\"=.    0'=/_       \\0 |  '=._    |0  \\     '=./`,0   '=.__.=' `='"
     count = 0
@@ -371,7 +376,7 @@ def drawBG(stdscr, stars):
             count = 0
             continue
         else:
-            stdscr.addch(curs[0], curs[1], i)
+            stdscr.addch(curs[0], curs[1], i, curses.color_pair(2))
             curs[1] += 1
             count += 1
 
@@ -421,7 +426,7 @@ def drawTitle(stdscr, prevscore):
     for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
         try:
             stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
-            stdscr.addstr(title[num])
+            stdscr.addstr(title[num], curses.color_pair(2))
         except:
             pass
     stdscr.refresh()
@@ -440,9 +445,9 @@ def gameover(stdscr, score, rocketxy):
     drawDeadRocket(stdscr, rocketxy)
     stdscr.clear()
     stdscr.move(math.trunc(maxyx[0]/2-1), math.trunc(maxyx[1]/2-math.trunc(len(line0)/2)))
-    stdscr.addstr(line0)
+    stdscr.addstr(line0, curses.color_pair(1))
     stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(line1)/2)))
-    stdscr.addstr(line1)
+    stdscr.addstr(line1, curses.color_pair(1))
     stdscr.refresh()
     time.sleep(2)
     curses.flushinp()
@@ -453,21 +458,21 @@ def gameover(stdscr, score, rocketxy):
 
 def drawUI(stdscr, health, ammo):
     stdscr.move(0, 0)
-    stdscr.addstr("Health: [")
+    stdscr.addstr("Health: [", curses.color_pair(2))
     while (health>0):
-        stdscr.addch('#')
+        stdscr.addch('#', curses.color_pair(1))
         health -= 1
     stdscr.move(0, 19)
-    stdscr.addch(']')
+    stdscr.addch(']', curses.color_pair(2))
     stdscr.move(0, 25)
-    stdscr.addstr("Ammo: [")
+    stdscr.addstr("Ammo: [", curses.color_pair(2))
     while ammo>0:
-        stdscr.addch("-")
+        stdscr.addch("-", curses.color_pair(5))
         ammo -= 1
     stdscr.move(0, 52)
-    stdscr.addch("]")
+    stdscr.addch("]", curses.color_pair(2))
 
-def drawEnemy(stdscr, enemys, enemId, enemY, enemX, sprite):
+def drawEnemy(stdscr, enemys, enemId, enemY, enemX, enemCol, sprite):
     maxyx = stdscr.getmaxyx()
     enemy = enemys[enemId]
     curs = [enemY, enemX]
@@ -484,7 +489,7 @@ def drawEnemy(stdscr, enemys, enemId, enemY, enemX, sprite):
                 count = 0
             else:
                 stdscr.move(curs[0], curs[1])
-                stdscr.addch(i)
+                stdscr.addch(i, curses.color_pair(enemCol))
                 curs[1] += 1
                 count += 1
 
@@ -515,10 +520,10 @@ def drawBullets(stdscr, points, points1):
     #pew pew
     for i in points:
         stdscr.move(i[0], i[1])
-        stdscr.addch("-")
+        stdscr.addch("-", curses.color_pair(5))
     for i in points1:
         stdscr.move(i[0], i[1])
-        stdscr.addch("-")
+        stdscr.addch("-", curses.color_pair(1))
 
 def drawRocket(stdscr, points):
     rocketSprite = [
@@ -538,8 +543,10 @@ def drawRocket(stdscr, points):
                             locy = tmp[0]
                             locx = tmp[1]
                             stdscr.move(locy, locx+1)
+                    elif (rocketSprite[i][j] == ' '):
+                        stdscr.addch(' ', curses.color_pair(1))
                     else: 
-                        stdscr.addch(rocketSprite[i][j])
+                        stdscr.addch(rocketSprite[i][j], curses.color_pair(2))
             tmp = stdscr.getyx()
             locy = tmp[0]
             locx = tmp[1]
@@ -564,9 +571,11 @@ def drawDeadRocket(stdscr, points):
                             locy = tmp[0]
                             locx = tmp[1]
                             stdscr.move(locy, locx+1)
+                    elif (rocketSprite[i][j] == ' '):
+                        stdscr.addch(' ', curses.color_pair(1))
                     else: 
                         if (random.randrange(10) % 3 != 0):
-                            stdscr.addch(rocketSprite[i][j])
+                            stdscr.addch(rocketSprite[i][j], curses.color_pair(2))
                         else:
                             stdscr.addch(' ')
             tmp = stdscr.getyx()
