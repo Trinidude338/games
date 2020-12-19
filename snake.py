@@ -11,6 +11,10 @@ def main():
     global maxyx
     global dead
     stdscr = curses.initscr()
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.raw()
     curses.noecho()
     stdscr.keypad(True)
@@ -133,7 +137,7 @@ def drawTitle(stdscr):
 
 def drawLength(stdscr):
     length = "Length: " + str(len(offset))
-    stdscr.addstr(length)
+    stdscr.addstr(length, curses.color_pair(2))
 
 def gameover(stdscr):
     msg0 = "You were " + str(len(offset)) + " X's long when you met your demise."
@@ -181,12 +185,12 @@ def isOutofBounds():
 
 def drawFood(stdscr, foody, foodx):
     stdscr.move(foody, foodx)
-    stdscr.addch('o')
+    stdscr.addch('o', curses.color_pair(3))
 
 def drawSnake(stdscr):
     curs = [head[0],head[1]]
     stdscr.move(head[0], head[1])
-    stdscr.addch('%')
+    stdscr.addch('%', curses.color_pair(1))
     n = -1
     while (n > len(offset)*-1):
         if (offset[n] == 0):
@@ -198,7 +202,7 @@ def drawSnake(stdscr):
         elif (offset[n] == 3):
             curs[1] -= 1
         stdscr.move(curs[0], curs[1])
-        stdscr.addch('X')
+        stdscr.addch('X', curses.color_pair(2))
         n -= 1
     return 0
 
