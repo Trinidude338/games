@@ -11,6 +11,8 @@ def main():
     dead = False
     stdscr = curses.initscr()
     curses.start_color()
+    curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.raw()
     curses.noecho()
     curses.cbreak()
@@ -86,14 +88,14 @@ def main():
             dead = True
         #
         stdscr.refresh()
-        time.sleep(0.016)
         stdscr.erase()
+        time.sleep(0.016)
     curses.endwin()
 
 def drawUI(stdscr, score):
     maxyx = stdscr.getmaxyx()
     stdscr.move(0, 0)
-    stdscr.addstr("Score: ")
+    stdscr.addstr("Score: ", curses.color_pair(1))
     stdscr.addstr(str(score))
 
 def genTubes(stdscr):
@@ -113,20 +115,20 @@ def drawTubes(stdscr, tubes):
         curs[1] = i[0][1]-7
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_LLCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_LLCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         for j in range(13):
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                        stdscr.addch(curs[0], curs[1], curses.ACS_HLINE)
+                        stdscr.addch(curs[0], curs[1], curses.ACS_HLINE, curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_LRCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_LRCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
@@ -134,32 +136,32 @@ def drawTubes(stdscr, tubes):
         curs[1] = i[0][1]-7
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_ULCORNER)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_ULCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_LRCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_LRCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         for j in range(11):
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                        stdscr.addch(curs[0], curs[1], ' ')
+                        stdscr.addch(curs[0], curs[1], ' ', curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_LLCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_LLCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_URCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_URCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
@@ -168,20 +170,20 @@ def drawTubes(stdscr, tubes):
             curs[1] = i[0][1]-6
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE, curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
             for x in range(11):
                 if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                     try:
-                        stdscr.addch(curs[0], curs[1], ' ')
+                        stdscr.addch(curs[0], curs[1], ' ', curses.color_pair(2))
                     except:
                             pass
                 curs[1] += 1
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE, curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
@@ -190,20 +192,20 @@ def drawTubes(stdscr, tubes):
         curs[1] = i[1][1]-7
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_ULCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_ULCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         for j in range(13):
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_HLINE)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_HLINE, curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_URCORNER)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_URCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
@@ -211,32 +213,32 @@ def drawTubes(stdscr, tubes):
         curs[1] = i[1][1]-7
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_LLCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_LLCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_URCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_URCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         for j in range(11):
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                    stdscr.addch(curs[0], curs[1], ' ')
+                    stdscr.addch(curs[0], curs[1], ' ', curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_ULCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_ULCORNER, curses.color_pair(2))
             except:
                 pass
         curs[1] += 1
         if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
             try:
-                stdscr.addch(curs[0], curs[1], curses.ACS_LRCORNER)
+                stdscr.addch(curs[0], curs[1], curses.ACS_LRCORNER, curses.color_pair(2))
             except:
                     pass
         curs[1] += 1
@@ -245,20 +247,20 @@ def drawTubes(stdscr, tubes):
             curs[1] = i[1][1]-6
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE, curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
             for x in range(11):
                 if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                     try:
-                        stdscr.addch(curs[0], curs[1], ' ')
+                        stdscr.addch(curs[0], curs[1], ' ', curses.color_pair(2))
                     except:
                         pass
                 curs[1] += 1
             if (curs[0]<maxyx[0] and curs[1]<maxyx[1]):
                 try:
-                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE)
+                    stdscr.addch(curs[0], curs[1], curses.ACS_VLINE, curses.color_pair(2))
                 except:
                     pass
             curs[1] += 1
@@ -290,7 +292,7 @@ def drawFlappy(stdscr, pos):
             count += 1
             if (curs[0]<maxyx[0]-1 and curs[1]<maxyx[1]-1):
                 try:
-                    stdscr.addch(curs[0], curs[1], i)
+                    stdscr.addch(curs[0], curs[1], i, curses.color_pair(1))
                 except:
                     pass
 
@@ -338,7 +340,7 @@ def drawTitle(stdscr, prevscore):
     for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
         try:
             stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
-            stdscr.addstr(title[num])
+            stdscr.addstr(title[num], curses.color_pair(1))
         except:
             pass
     stdscr.refresh()
@@ -355,9 +357,9 @@ def gameover(stdscr, score):
     line1 = "Score : " + str(score)
     stdscr.clear()
     stdscr.move(math.trunc(maxyx[0]/2-1), math.trunc(maxyx[1]/2-math.trunc(len(line0)/2)))
-    stdscr.addstr(line0)
+    stdscr.addstr(line0, curses.color_pair(1))
     stdscr.move(math.trunc(maxyx[0]/2+1), math.trunc(maxyx[1]/2-math.trunc(len(line1)/2)))
-    stdscr.addstr(line1)
+    stdscr.addstr(line1, curses.color_pair(1))
     stdscr.refresh()
     time.sleep(2)
     curses.flushinp()
