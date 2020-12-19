@@ -9,6 +9,11 @@ def main():
     autoQueen1 = [56, 57, 58, 59, 60, 61, 62, 63]
     stdscr = curses.initscr()
     curses.start_color()
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_RED)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_BLUE)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_GREEN)
     curses.raw()
     curses.noecho()
     curses.cbreak()
@@ -43,7 +48,7 @@ def main():
         else:
             frame += 1
         #draw frame
-        drawBoard(stdscr, chessBoard, chessCurs, blink, ifMoves, moves)
+        drawBoard(stdscr, chessBoard, chessPiece, chessCurs, blink, ifMoves, moves)
         drawUI(stdscr, whosTurnIsIt, chessPiece, checkX, checkO)
         #keyboard input
         try:
@@ -524,7 +529,7 @@ def drawUI(stdscr, turn, piece, x, o):
         line1 = ''
     stdscr.addstr(5, 1, line1)
 
-def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
+def drawBoard(stdscr, chessBoard, chessPiece, chessCurs, ifBlinkOn, ifMoves, moves):
     maxyx = stdscr.getmaxyx()
     topLeftCorner = [math.trunc(maxyx[0]/2-25), math.trunc(maxyx[1]/2-40)]
     curs = [topLeftCorner[0], topLeftCorner[1]]
@@ -604,19 +609,22 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
         curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
         for j in range(5):
             for x in range(9):
-                stdscr.addch(curs[0], curs[1]+x, checkerboard[num])
+                if(checkerboard[num]=='.'):
+                    stdscr.addch(curs[0], curs[1]+x, checkerboard[num], curses.color_pair(3))
+                else:
+                    stdscr.addch(curs[0], curs[1]+x, checkerboard[num], curses.color_pair(4))
             curs[0] += 1
         curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
         if (num in moves and ifMoves==1):
             for j in range(5):
                 for x in range(9):
-                    stdscr.addch(curs[0], curs[1]+x, '@')
+                    stdscr.addch(curs[0], curs[1]+x, '@', curses.color_pair(chessPiece[1]))
                 curs[0] += 1
         curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
         if (num==chessCurs and ifBlinkOn!=1):
             for j in range(5):
                 for x in range(9):
-                    stdscr.addch(curs[0], curs[1]+x, '#')
+                    stdscr.addch(curs[0], curs[1]+x, '#', curses.color_pair(5))
                 curs[0] += 1
             curs = [math.trunc(topLeftCorner[0]+int(num/8)*6)+1, math.trunc(topLeftCorner[1]+(num%8)*10)+1]
         if (i[1]==0):
@@ -627,7 +635,7 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
                     if (c==' '):
                         pass
                     else:
-                        stdscr.addch(curs[0], curs[1]+x, c)
+                        stdscr.addch(curs[0], curs[1]+x, c, curses.color_pair(1))
                 curs[0] += 1
         else:
             for j in pieces1[i[0]-1]:
@@ -635,7 +643,7 @@ def drawBoard(stdscr, chessBoard, chessCurs, ifBlinkOn, ifMoves, moves):
                     if (c==' '):
                         pass
                     else:
-                        stdscr.addch(curs[0], curs[1]+x, c)
+                        stdscr.addch(curs[0], curs[1]+x, c, curses.color_pair(2))
                 curs[0] += 1
 
 def screenTooSmall(stdscr):
