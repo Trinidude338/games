@@ -11,6 +11,10 @@ def main():
     dead = False
     stdscr = curses.initscr()
     curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.raw()
     curses.noecho()
     curses.cbreak()
@@ -39,7 +43,7 @@ def main():
     seconds = 0
     score = 0
     mapToggle = 0
-    playerPos = [14.0, 1.0]
+    playerPos = [14.5, 1.5]
     playerA = 0.0
     playerFOV = 3.14159 / 1.75
     drawTitle(stdscr)
@@ -92,6 +96,7 @@ def main():
 
 def success(stdscr):
     maxyx = stdscr.getmaxyx()
+    curses.beep()
     line0 = "Success"
     stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2-len(line0)/2), line0)
     stdscr.refresh()
@@ -189,32 +194,36 @@ def drawWalls(stdscr, mapStr, playerPos, playerA, playerFOV):
                 except:
                     pass
             elif (curs[0]>ceiling and curs[0]<=floor):
-                if (curs[1] in rayArr and distanceToWall<depth/2.0):
-                    boundary = True
-                if (boundary):
+                if (curs[1] in rayArr and distanceToWall<depth):
                     shade = '|'
+                    color = 3
                 elif (distanceToWall<=depth/4.0):
                     shade = '#'
+                    color = 2
                 elif (distanceToWall<depth/3.0):
                     shade = 'X'
+                    color = 2
                 elif (distanceToWall<depth/2.0):
                     shade = 'O'
+                    color = 2
                 elif (distanceToWall<depth):
                     shade = '.'
+                    color = 2
                 else:
                     shade = ' '
+                    color = 2
                 try:
-                    stdscr.addch(curs[0], curs[1], shade)
+                    stdscr.addch(curs[0], curs[1], shade, curses.color_pair(color))
                 except:
                     pass
             else:
                 b = 1.0 - ((curs[0]-maxyx[0]/2.0)/(maxyx[0]/2.0))
                 if (b < 0.25):
-                    shade = '='
+                    shade = ';'
                 elif (b < 0.5):
-                    shade = '~'
+                    shade = ','
                 elif (b < 0.75):
-                    shade = '-'
+                    shade = '.'
                 elif (b < 0.9):
                     shade = '.'
                 else:
@@ -263,9 +272,10 @@ def drawControls(stdscr):
 
 def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
-    title = "Maze"
-    stdscr.move(math.trunc(maxyx[0]/2), math.trunc(maxyx[1]/2-math.trunc(len(title)/2)))
-    stdscr.addstr(title)
+    title = ["'##::::'##::::'###::::'########:'########:", " ###::'###:::'## ##:::..... ##:: ##.....::", " ####'####::'##:. ##:::::: ##::: ##:::::::", " ## ### ##:'##:::. ##:::: ##:::: ######:::", " ##. #: ##: #########::: ##::::: ##...::::", " ##:.:: ##: ##.... ##:: ##:::::: ##:::::::", " ##:::: ##: ##:::: ##: ########: ########:", "..:::::..::..:::::..::........::........::"]
+    for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
+        stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
+        stdscr.addstr(title[num], curses.color_pair(4))
     stdscr.refresh()
     time.sleep(1)
     curses.flushinp()
