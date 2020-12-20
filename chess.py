@@ -14,6 +14,8 @@ def main():
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_BLACK)
     curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_WHITE)
     curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_GREEN)
+    curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(7, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.raw()
     curses.noecho()
     curses.cbreak()
@@ -144,9 +146,9 @@ def checkmate(stdscr, winner):
     maxyx = stdscr.getmaxyx()
     stdscr.erase()
     if (winner==0):
-        line0 = "X won by Checkmate!"
+        line0 = "Red won by Checkmate!"
     else:
-        line0 = "O won by Checkmate!"
+        line0 = "Blue won by Checkmate!"
     stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2-len(line0)/2), line0)
     stdscr.refresh()
     time.sleep(4)
@@ -164,11 +166,12 @@ def genMoves(chessBoard, chessPiece):
     #knightArr = [15, 17, 6, 10]
     knightArr = [-15, -6, 10, 17, 15, 6, -10, -17]
     kingArr = [1, 7, 8, 9]
-    pawnArr = []
+    pawnArr0 = []
+    pawnArr1 = []
     for i in range(8, 16):
-        pawnArr.append([i, i+16])
+        pawnArr0.append([i, i+16])
     for i in range(48, 56):
-        pawnArr.append([i, i-16])
+        pawnArr1.append([i, i-16])
     if (chessPiece[1]==1):
         if(chessPiece[0]==1):
             if(chessBoard[chessPiece[2]-8]==[0, 0]):
@@ -177,7 +180,7 @@ def genMoves(chessBoard, chessPiece):
                 moves.append(chessPiece[2]-7)
             if(chessBoard[chessPiece[2]-9][1]==2 and chessPiece[2] not in walls0):
                 moves.append(chessPiece[2]-9)
-            for i in pawnArr:
+            for i in pawnArr1:
                 if(chessPiece[2]==i[0] and chessBoard[i[1]]==[0, 0]):
                     moves.append(i[1])
         elif(chessPiece[0]==2):
@@ -330,9 +333,11 @@ def genMoves(chessBoard, chessPiece):
         elif(chessPiece[0]==6):
             for i in kingArr:
                 if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=1):
-                    moves.append(chessPiece[2]-i)
+                    if(not ((i==7) and chessPiece[2] in walls1)):
+                        moves.append(chessPiece[2]-i)
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=1):
-                    moves.append(chessPiece[2]+i)
+                    if(not ((i==7) and chessPiece[2] in walls0)):
+                        moves.append(chessPiece[2]+i)
     elif (chessPiece[1]==2):
         if(chessPiece[0]==1):
             if(chessBoard[chessPiece[2]+8]==[0, 0]):
@@ -341,7 +346,7 @@ def genMoves(chessBoard, chessPiece):
                 moves.append(chessPiece[2]+7)
             if(chessBoard[chessPiece[2]+9][1]==1 and chessPiece[2] not in walls1):
                 moves.append(chessPiece[2]+9)
-            for i in pawnArr:
+            for i in pawnArr0:
                 if(chessPiece[2]==i[0] and chessBoard[i[1]]==[0, 0]):
                     moves.append(i[1])
         elif(chessPiece[0]==2):
@@ -494,9 +499,11 @@ def genMoves(chessBoard, chessPiece):
         elif(chessPiece[0]==6):
             for i in kingArr:
                 if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=2):
-                    moves.append(chessPiece[2]-i)
+                    if(not ((i==7) and chessPiece[2] in walls1)):
+                        moves.append(chessPiece[2]-i)
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=2):
-                    moves.append(chessPiece[2]+i)
+                    if(not ((i==7) and chessPiece[2] in walls0)):
+                        moves.append(chessPiece[2]+i)
     return moves
 
 def drawUI(stdscr, turn, piece, x, o):
@@ -736,11 +743,18 @@ def drawTitle(stdscr):
     maxyx = stdscr.getmaxyx()
     title = ["        CCCCCCCCCCCCChhhhhhh                                                                         ", "        CCC::::::::::::Ch:::::h                                                                            ", "   CC:::::::::::::::Ch:::::h                                                                        ", "   C:::::CCCCCCCC::::Ch:::::h                                                                          ", "                           C:::::C       CCCCCC h::::h hhhhh           eeeeeeeeeeee        ssssssssss       ssssssssss                                     ", "  C:::::C               h::::hh:::::hhh      ee::::::::::::ee    ss::::::::::s    ss::::::::::s            ", "   C:::::C               h::::::::::::::hh   e::::::eeeee:::::eess:::::::::::::s ss:::::::::::::s            ", " C:::::C               h:::::::hhh::::::h e::::::e     e:::::es::::::ssss:::::ss::::::ssss:::::s        ", "C:::::C               h::::::h   h::::::he:::::::eeeee::::::e s:::::s  ssssss  s:::::s  ssssss        ", "C:::::C               h:::::h     h:::::he:::::::::::::::::e    s::::::s         s::::::s             ", "C:::::C               h:::::h     h:::::he::::::eeeeeeeeeee        s::::::s         s::::::s          ", "   C:::::C       CCCCCC h:::::h     h:::::he:::::::e           ssssss   s:::::s ssssss   s:::::s          ", "C:::::CCCCCCCC::::C h:::::h     h:::::he::::::::e          s:::::ssss::::::ss:::::ssss::::::s     ", "    CC:::::::::::::::C h:::::h     h:::::h e::::::::eeeeeeee  s::::::::::::::s s::::::::::::::s         ", "CCC::::::::::::C h:::::h     h:::::h  ee:::::::::::::e   s:::::::::::ss   s:::::::::::ss    ", "            CCCCCCCCCCCCC hhhhhhh     hhhhhhh    eeeeeeeeeeeeee    sssssssssss      sssssssssss               "]
     for num, i in enumerate(range(int(0-len(title)/2), int(len(title)/2))):
-        try:
-            stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
-            stdscr.addstr(title[num])
-        except:
-            pass
+        stdscr.move(math.trunc(maxyx[0]/2+i), math.trunc(maxyx[1]/2-math.trunc(len(title[num])/2)))
+        for j in title[num]:
+            if(j==' '):
+                color = 3
+            elif(i%2==0):
+                color = 6
+            else:
+                color = 7
+            try:
+                stdscr.addch(j, curses.color_pair(color))
+            except:
+                pass
     stdscr.refresh()
     time.sleep(1)
     curses.flushinp()
