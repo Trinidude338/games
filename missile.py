@@ -415,7 +415,7 @@ def drawBG(stdscr, stars):
             count = 0
             continue
         else:
-            stdscr.addch(curs[0], curs[1], i, curses.color_pair(2))
+            stdscr.addch(curs[0], curs[1], i, curses.color_pair(5))
             curs[1] += 1
             count += 1
 
