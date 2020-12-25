@@ -150,6 +150,7 @@ def main():
 def genAIMove(chessBoard, chessPiece, chessCurs, checkO):
     aiPieces = []
     playerMoves = []
+    possiblePlayerMoves = []
     pawns = []
     for num, i in enumerate(chessBoard):
         if(i[1]==2 and len(genMoves(chessBoard, [i[0], i[1], num]))>0):
@@ -158,16 +159,17 @@ def genAIMove(chessBoard, chessPiece, chessCurs, checkO):
         if(i[1]==1 and len(genMoves(chessBoard, [i[0], i[1], num]))>0):
             for j in genMoves(chessBoard, [i[0], i[1], num]):
                 playerMoves.append(j)
+                possiblePlayerMoves.extend(genMoves(chessBoard, [i[0], i[1], j]))
     for num, i in enumerate(aiPieces):
         if(chessBoard[i[0]]==[1, 2]):
             pawns.append(num)
     dangerTotal = 0
     for i in aiPieces:
         dangerCount = 0
-        if(i[0] in playerMoves):
+        if(i[0] in playerMoves or i[0] in possiblePlayerMoves):
             dangerCount -= 1
         for j in i[1]:
-            if(j in playerMoves):
+            if(j in playerMoves or j in possiblePlayerMoves):
                 dangerCount -= 1
         dangerTotal -= dangerCount
         i.append(dangerCount)
@@ -176,13 +178,13 @@ def genAIMove(chessBoard, chessPiece, chessCurs, checkO):
         goodMovCount = 0
         for num, j in enumerate(i[1]):
             if(chessBoard[j][0]==5):
-                goodMovCount += 1
+                goodMovCount += 9
             elif(chessBoard[j][0]==4):
-                goodMovCount += 1
+                goodMovCount += 3
             elif(chessBoard[j][0]==3):
-                goodMovCount += 1
+                goodMovCount += 3
             elif(chessBoard[j][0]==2):
-                goodMovCount += 1
+                goodMovCount += 5
             elif(chessBoard[j][0]==1):
                 goodMovCount += 1
         totalMovCount += goodMovCount
@@ -216,7 +218,7 @@ def genAIMove(chessBoard, chessPiece, chessCurs, checkO):
             k = num
             break
     for i in aiPieces[k][1]:
-        if(i in playerMoves):
+        if(i in playerMoves or i in possiblePlayerMoves):
             aiPieces[k][1].pop(aiPieces[k][1].index(i))
     if(checkO==1):
         for num, i in enumerate(aiPieces):
@@ -424,10 +426,10 @@ def genMoves(chessBoard, chessPiece):
         elif(chessPiece[0]==6):
             for i in kingArr:
                 if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=1):
-                    if(not ((i==7) and chessPiece[2] in walls1)):
+                    if(not ((i==7 or i==1) and chessPiece[2] in walls0)):
                         moves.append(chessPiece[2]-i)
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=1):
-                    if(not ((i==7) and chessPiece[2] in walls0)):
+                    if(not ((i==9 or i==1) and chessPiece[2] in walls1)):
                         moves.append(chessPiece[2]+i)
     elif (chessPiece[1]==2):
         if(chessPiece[0]==1):
@@ -590,10 +592,10 @@ def genMoves(chessBoard, chessPiece):
         elif(chessPiece[0]==6):
             for i in kingArr:
                 if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=2):
-                    if(not ((i==7) and chessPiece[2] in walls1)):
+                    if(not ((i==7 or i==1) and chessPiece[2] in walls0)):
                         moves.append(chessPiece[2]-i)
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=2):
-                    if(not ((i==7) and chessPiece[2] in walls0)):
+                    if(not ((i==9 or i==1) and chessPiece[2] in walls1)):
                         moves.append(chessPiece[2]+i)
     return moves
 

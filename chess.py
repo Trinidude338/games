@@ -333,10 +333,10 @@ def genMoves(chessBoard, chessPiece):
         elif(chessPiece[0]==6):
             for i in kingArr:
                 if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=1):
-                    if(not ((i==7) and chessPiece[2] in walls1)):
+                    if(not ((i==7 or i==1) and chessPiece[2] in walls0)):
                         moves.append(chessPiece[2]-i)
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=1):
-                    if(not ((i==7) and chessPiece[2] in walls0)):
+                    if(not ((i==9 or i==1) and chessPiece[2] in walls1)):
                         moves.append(chessPiece[2]+i)
     elif (chessPiece[1]==2):
         if(chessPiece[0]==1):
@@ -499,10 +499,10 @@ def genMoves(chessBoard, chessPiece):
         elif(chessPiece[0]==6):
             for i in kingArr:
                 if(chessPiece[2]-i>=0 and chessPiece[2]-i<=63 and chessBoard[chessPiece[2]-i][1]!=2):
-                    if(not ((i==7) and chessPiece[2] in walls1)):
+                    if(not ((i==7 or i==1) and chessPiece[2] in walls0)):
                         moves.append(chessPiece[2]-i)
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=2):
-                    if(not ((i==7) and chessPiece[2] in walls0)):
+                    if(not ((i==9 or i==1) and chessPiece[2] in walls1)):
                         moves.append(chessPiece[2]+i)
     return moves
 
