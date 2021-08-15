@@ -29,9 +29,6 @@ def main():
     seconds = 0
     score = 0
     half = 0
-    playerCols = []
-    enemCols = []
-    ufoCols = []
     clouds = []
     enemys = []
     stars = []
@@ -107,7 +104,7 @@ def main():
         drawBullets(stdscr, bullets, bullets1)
         for i in enemys:
             drawEnemy(stdscr, enemysSpriteList, i[0], i[1], i[2], i[3], half)
-        drawUfos(stdscr, ufos, frame, ufosSpriteList, ufoCols)
+        drawUfos(stdscr, ufos, frame, ufosSpriteList)
         drawRocket(stdscr, rocketxy, rocketSprite)
         drawUI(stdscr, health, ammo)
         #keyboard input
@@ -212,100 +209,56 @@ def main():
             for i in range(ufocount):
                  ufos[i] = [random.randrange(10, maxyx[0]-10), random.randrange(math.trunc(maxyx[1]/2), maxyx[1]), ufos[i][2], ufos[i][3]]
         #detect bullet collisions
-        y = 0
-        x = 0
-        playerCols = []
-        for i in rocketSprite:
-            for j in i:
-                if(j=='0'):
-                    x += 1
-                else:
-                    playerCols.append([rocketxy[0]-y, rocketxy[1]+x])
-                    x += 1
-            y += 1
-            x = 0
-        enemCols = []
-        for num, i in enumerate(enemys):
-            y = 0
-            x = 0
-            for j in enemysSpriteList[i[0]]:
-                if(j=='0'):
-                    y += 1
-                    x = 0
-                elif(j==' '):
-                    x += 1
-                else:
-                    enemCols.append([i[1]+y, i[2]+x, num])
-                    x += 1
-        ufoCols = []
-        for num, i in enumerate(ufos):
-            y = 0
-            x = 0
-            if(frame%9+1<=3):
-                ufosind = 0
-            elif(frame%9+1>=4 and frame%9+1<=6):
-                ufosind = 1
-            else:
-                ufosind = 2
-            for j in ufosSpriteList[ufosind]:
-                if(j=='0'):
-                    y += 1
-                    x = 0
-                elif(j==' '):
-                    x += 1
-                else:
-                    ufoCols.append([i[0]+y, i[1]+x, num])
-                    x += 1
-        for i in bullets1:
-            if(i in playerCols):
-                bullets1.pop(bullets1.index(i))
-                health -= 1
-                curses.flash()
-        for i in bullets1:
-            for num, j in enumerate(enemys):
-                if([i[0], i[1], num] in enemCols):
-                    enemys.pop(num)
-                    num -= 1
-                    bullets1.pop(bullets1.index(i))
         for num, i in enumerate(bullets):
-            for j in enemCols:
-                if(i[0]==j[0] and i[1]==j[1]):
-                    enemys.pop(j[2])
+            for num2, j in enumerate(ufos):
+                if((i[0]>=j[0] and i[0]<=j[0]+len(ufosSpriteList)) and (i[1]>=j[1] and i[1]<=j[1]+len(ufosSpriteList[0]))):
                     bullets.pop(num)
                     num -= 1
                     score += 1
                     health += 1
-                    if (health>10):
-                        health = 10
                     ammo += 2
-                    if ammo>30:
+                    if(health>10):
+                        health = 10
+                    if(ammo>30):
                         ammo = 30
-        for num, i in enumerate(bullets):
-            for j in ufoCols:
-                if(i[0]==j[0] and i[1]==j[1]):
-                    if(ufos[j[2]][2]<2):
-                        bullets.pop(num)
-                        ufos[j[2]][2] += 1
-                        num -= 1
-                        score += 1
-                        health += 1
-                        if (health>10):
-                            health = 10
-                        ammo += 2
-                        if ammo>30:
-                            ammo = 30
+                    if(j[2]<1):
+                        j[2] += 1
                     else:
-                        ufos.pop(j[2])
-                        bullets.pop(num)
-                        num -= 1
-                        score += 1
-                        health += 1
-                        if (health>10):
-                            health = 10
-                        ammo += 2
-                        if ammo>30:
-                            ammo = 30
-
+                        ufos.pop(num2)
+                        num2 -= 1
+            for num2, j in enumerate(enemys):
+                if((i[0]>=j[1] and i[0]<=j[1]+enemysSpriteList[j[0]][3]) and (i[1]>=j[2] and i[1]<=j[2]+enemysSpriteList[j[0]][2])):
+                    bullets.pop(num)
+                    enemys.pop(num2)
+                    num2 -= 1
+                    num -= 1
+                    score += 1
+                    health += 1
+                    ammo += 2
+                    if(health>10):
+                        health = 10
+                    if(ammo>30):
+                        ammo = 30
+        for num, i in enumerate(bullets1):
+            if((i[0]<=rocketxy[0] and i[0]>=rocketxy[0]-len(rocketSprite)) and (i[1]<=rocketxy[1] and i[1]>=rocketxy[1]-len(rocketSprite[0]))):
+                bullets1.pop(num)
+                num -= 1
+                health -= 1
+                curses.flash()
+                continue
+            for num2, j in enumerate(enemys):
+                if((i[0]>=j[1] and i[0]<=j[1]+enemysSpriteList[j[0]][3]) and (i[1]>=j[2] and i[1]<=j[2]+enemysSpriteList[j[0]][2])):
+                    bullets1.pop(num)
+                    enemys.pop(num2)
+                    num2 -= 1
+                    num -= 1
+                    score += 1
+                    health += 1
+                    ammo += 2
+                    if(health>10):
+                        health = 10
+                    if(ammo>30):
+                        ammo = 30
         #add stars
         if (frame%random.randrange(20, 40)==0):
             stars.append([random.randrange(3), random.randrange(maxyx[0]-1), maxyx[1]-1, random.randrange(2, 4)])
@@ -336,7 +289,7 @@ def main():
         time.sleep(0.016)
     curses.endwin()
 
-def drawUfos(stdscr, ufos, frame, ufosSpriteList, ufoCols):
+def drawUfos(stdscr, ufos, frame, ufosSpriteList):
     maxyx = stdscr.getmaxyx()
     curs = []
     for ufo in ufos:
