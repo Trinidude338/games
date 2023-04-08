@@ -244,7 +244,7 @@ def checkmate(stdscr, winner):
         line0 = "Blue won by Checkmate!"
     stdscr.addstr(int(maxyx[0]/2), int(maxyx[1]/2-len(line0)/2), line0)
     stdscr.refresh()
-    time.sleep(4)
+    time.sleep(20)
 
 def genMoves(chessBoard, chessPiece): 
     moves = []
@@ -431,6 +431,10 @@ def genMoves(chessBoard, chessPiece):
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=1):
                     if(not ((i==9 or i==1) and chessPiece[2] in walls1)):
                         moves.append(chessPiece[2]+i)
+            if(chessPiece[2] in walls0):
+                moves.remove(chessPiece[2]+7)
+            elif(chessPiece[2] in walls1):
+                moves.remove(chessPiece[2]-7)
     elif (chessPiece[1]==2):
         if(chessPiece[0]==1):
             if(chessBoard[chessPiece[2]+8]==[0, 0]):
@@ -597,13 +601,18 @@ def genMoves(chessBoard, chessPiece):
                 if(chessPiece[2]+i>=0 and chessPiece[2]+i<=63 and chessBoard[chessPiece[2]+i][1]!=2):
                     if(not ((i==9 or i==1) and chessPiece[2] in walls1)):
                         moves.append(chessPiece[2]+i)
+            if(chessPiece[2] in walls0):
+                moves.remove(chessPiece[2]+7)
+            elif(chessPiece[2] in walls1):
+                moves.remove(chessPiece[2]-7)
+                
     return moves
 
 def drawUI(stdscr, turn, piece, x, o):
     if(turn==0):
-        stdscr.addstr(1, 1, "X's turn to play")
+        stdscr.addstr(1, 1, "Red's turn to play")
     else:
-        stdscr.addstr(1, 1, "O's turn to play")
+        stdscr.addstr(1, 1, "Blue's turn to play")
     if(piece[0]==1):
         line0 = "Pawn"
     elif(piece[0]==2):
@@ -622,9 +631,9 @@ def drawUI(stdscr, turn, piece, x, o):
     if(x==1 and o==1):
         line1 = "X and O are in Check!!"
     elif(x==1 and o==0):
-        line1 = "X is in Check!!"
+        line1 = "Red is in Check!!"
     elif(x==0 and o==1):
-        line1 = "O is in Check!!"
+        line1 = "Blue is in Check!!"
     else:
         line1 = ''
     stdscr.addstr(5, 1, line1)
@@ -859,9 +868,9 @@ def drawTitle(stdscr):
 def gameover(stdscr, turn):
     maxyx = stdscr.getmaxyx()
     if(turn==0):
-        line0 = "Quit during X's turn"
+        line0 = "Quit during Red's turn"
     else:
-        line0 = "Quit during O's turn"
+        line0 = "Quit during Blue's turn"
     stdscr.clear()
     stdscr.move(math.trunc(maxyx[0]/2-1), math.trunc(maxyx[1]/2-math.trunc(len(line0)/2)))
     stdscr.addstr(line0)
